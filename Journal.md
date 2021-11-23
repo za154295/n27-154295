@@ -24,7 +24,7 @@ Absätze in HTML erstellen: <p></p>
     *1. Autospeichern einschalten bzw. auf Speichern klicken
     *2. in VSC auf das Gitsymbol auf der Leiste ganz Links klicken
 Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
-    *3. eine Nachricht zu dem Vorgenommenen Änderungen des Quelltextes eintippen. Dann den Comit-Haken klicken (Comiten)
+    *3. eine Nachricht zu dem Vorgenommenen Änderungen des Quelltextes eintippen. Dann den Commit-Haken klicken (Commiten)
     *4. Pull und Push auslösen, indem auf das Rädchen oder die Wolke ganz unten Links geklickt wird
 
 ## 23.11.2021
