@@ -28,3 +28,12 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     *4. Pull und Push auslösen, indem auf das Rädchen oder die Wolke ganz unten Links geklickt wird
 
 ## 23.11.2021
+    *
+
+
+## 30.11.2021
+    *Am Anfang der S>tunde wird der eigene Webserver im Terminal gestartet. Der Befehl wird mit der Pfeiltaste nach oben angezeigt und ausgeführt.
+    *Im Broser wird der Inhalt über die Adresse "localhost:3000" aufgerufen.
+    *Der "localhost" ist der eigene Rechner
+    *Mit dem Befehl "ipconfig" wird die eigene IP-Adresse angezeigt. Die eigene IP-Adresse ist im Netzwerk eindeutig.
+    
