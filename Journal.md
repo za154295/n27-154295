@@ -37,3 +37,9 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     *Der "localhost" ist der eigene Rechner
     *Mit dem Befehl "ipconfig" wird die eigene IP-Adresse angezeigt. Die eigene IP-Adresse ist im Netzwerk eindeutig.
     
+## 03.12.2021
+    *Schriftart ändern mit CSS
+    *HTML-Grundgerüst erstellen
+    *Button erstellen
+    *style einfügen über styles.css-Datei
+    *Geschweifte Klammer mit ALTGr+7 erstellen
