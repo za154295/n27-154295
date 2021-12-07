@@ -43,3 +43,7 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     *Button erstellen
     *style einfügen über styles.css-Datei
     *Geschweifte Klammer mit ALTGr+7 erstellen
+
+## 07.12.2021
+    *Schriftart mit CSS bearbeiten.
+    *styles.css in public ordner verschoben
