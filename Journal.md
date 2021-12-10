@@ -47,3 +47,15 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
 ## 07.12.2021
     *Schriftart mit CSS bearbeiten.
     *styles.css in public ordner verschoben
+
+## 10.12.2021
+    
+    * Verschiedene Elemte in HTML recherchieren und einbauen
+    * Verschiedene Elemte in HTML stylen
+    * Gute und weniger gute Seiten von einander unterscheiden. Gute Seiten sind w3schools oder selfhtml
+
+
+
+## 14.01.2022
+    * HTML 
+    * CSS 
