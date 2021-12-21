@@ -57,6 +57,10 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
 
 
 ## 14.01.2022
+    * ein lauffähiges Projekt mit leeren index.ejs ausgeteilt. Es ist keine styles.css vorhanden. 
+    * Die styles.css muss angelegt und richtig in der index.ejs eingebaut werden.
+    * Teil 1: HTML und CSS nach vorgabe einbauen
+    * Teil 2: Ein unbekanntes Konstrukt muss im Internetgesucht und ein gebaut werden.
     * HTML 
     * CSS
     
