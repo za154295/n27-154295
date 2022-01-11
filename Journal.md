@@ -54,6 +54,17 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     * Verschiedene Elemte in HTML stylen
     * Gute und weniger gute Seiten von einander unterscheiden. Gute Seiten sind w3schools oder selfhtml
 
+    
+## 17.12.2021
+    * Zeilen und Spalten in HTML verstehen
+    * Zeilen <tr> (=table-row) und Zellen <td> (=table-data)
+    in HTML Tabellen verstehen
+    * Listen (geordnet <ol> und ungeordnet <ul> verstehen)
+    * in ungeordneten Listen den Aufzählungspunkt gestalten oder durch Bild ersetzen
+    * Horizontale Linie <hr> einbauen
+
+## 21.12.2021
+    * Zeilenumbruch <br> einbauen
 
 
 ## 14.01.2022
@@ -63,14 +74,4 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     * Teil 2: Ein unbekanntes Konstrukt muss im Internetgesucht und ein gebaut werden.
     * HTML 
     * CSS
-    
-## 17.12.2021
-    * Zeilen und Spalten iin HTML verstehen
-    * Zeilen <tr> (=table-row) und Zellen <td> (=table-data)
-    in HTML Tabellen verstehen
-    * Listen (geordnet <ol> und ungeordnet <ul> verstehen)
-    * in ungeordneten Listen den Aufzählungspunkt gestalten oder durch Bild ersetzen
-    * Horizontale Linie <hr> einbauen
-
-## 21.12.2021
-    * Zeilenumbruch <br> einbauen
+    * Die styles.css müssen gekonnt werden. Es kann auch sein, dass unbekannte Styles nach Vorgabe eingebaut werden müssen. Beispie: gebe
