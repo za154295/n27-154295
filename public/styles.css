@@ -1,22 +1,23 @@
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    color:whitesmoke;
-    background-color :rgb(37, 36, 36)
+/*Arne Zender*/
 
+body{font-family: 'Courier New', Courier, monospace;
+    Font-size:x-small;
+    color: greenyellow
 }
 
-h1 {font-family: comic sans-serif; color:
-    font-size : xx-large;
-;}
-
-h2 {font-family: Arial, Helvetica, sans-serif;
-
+table{background-color:lavender
 }
 
-
-ul {
-    list-style: square url(icon.png);
-
-
+button{color:hotpink;
+    background-color:khaki;
+    radius: 10px;
 }
 
+hyperlink{font-family: arial,sans-serif;
+}
+
+hr{border:solid #00ffff 3px;
+    background-color:#0000ff;
+    height: 10px;
+    width: 50px;
+}
