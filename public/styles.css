@@ -13,7 +13,7 @@ button{color:hotpink;
     radius: 10px;
 }
 
-hyperlink{font-family: arial,sans-serif;
+a{font-family: arial,sans-serif;
 }
 
 hr{border:solid #00ffff 3px;
