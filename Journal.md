@@ -75,3 +75,7 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     * HTML 
     * CSS
     * Die styles.css müssen gekonnt werden. Es kann auch sein, dass unbekannte Styles nach Vorgabe eingebaut werden müssen. Beispie: gebe
+
+
+## 18.01.2022
+    * weitere Seite erstellen, indem die Index.ejs kopiert und umbenannt wurde
