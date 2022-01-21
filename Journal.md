@@ -79,3 +79,10 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
 
 ## 18.01.2022
     * weitere Seite erstellen, indem die Index.ejs kopiert und umbenannt wurde
+
+## 21.01.2022
+    * Formular kopiert und eingefügt
+    * login-Seite erstellt
+    * Type der Inputs entsprechend von Text auf Passwort bzw. Number geändert
+    * die ID der Inputs setzen
+    * Verlinkung von Login nach Index und zurück erstellen
