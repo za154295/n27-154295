@@ -18,6 +18,10 @@ app.get('/',(req, res, next) => {
 app.get('/login',(req, res, next) => {   
     // ... dann wird die login.ejs vom Lerver gerendert und an den
     // Browser zurückgegeben:    
-    res.render('login.ejs', {})          
+    res.render('login.ejs', {})
+}) 
+    // die app.post('login') wird ausgeführt, sobald der Button auf dem Formular gedrückt wird.
+app.post('/login',(req, res, next) => {   
+        res.render('index.ejs', {})          
 })
 

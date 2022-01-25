@@ -86,3 +86,8 @@ Anzahl der anstehenden Änderungen werden in einem blauen Kreis angezeigt
     * Type der Inputs entsprechend von Text auf Passwort bzw. Number geändert
     * die ID der Inputs setzen
     * Verlinkung von Login nach Index und zurück erstellen
+
+## 25.01.2022
+    * Unterschied zwischen POST und GET verstehen. GET transportiert die Daten vom Browser zum Server über die Adresszeile. Post transportiert die Daten "hinter den Kulissen".
+    * Raustabben
+    * Unterschied zwischen app.get(...) und app.pst(...) verstehen. app.get('login') wird ausgeführt, wenn die Login-Seite im Browser angefordert wird. app.get('login') wird ausgeführt, wenn der Button auf der Login-Seite gedrückt wird.

@@ -8,12 +8,12 @@
     <title>Login</title>
 </head>
 <body>
-    <form action="/">
+    <form method="post">
         <label for="fname">Benutzer-ID:</label><br>
-        <input type="number" id="idBenutzer" ><br>
+        <input type="number" name="idBenutzer" ><br>
         <label for="lname">Passwort:</label><br>
         <input type="password" id="Kennwort" ><br><br>
-        <input type="submit" value="Einloggen">
+        <button formaction="/login">Einloggen</button>
       </form> 
 </body>
 </html>
