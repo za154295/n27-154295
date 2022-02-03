@@ -1,3 +1,39 @@
+// Programme verarbeiten oft Objekte der Realen Welt. 
+// Objekte haben Eigenschaften. 
+// In unserem Bankingprogramm interessieren uns Objekte, 
+// wie z.B. Kunde, Konto, Filliale, Bankautomat, ...
+// Alle Kunden unserer bank haben die selben Eigenschafte, aber
+// unterschiedliche Eigenschaftswerte
+
+class Kunde{
+    constructor(){
+        this.IdKunde
+        this.Nachname
+        this.Vorname
+        this.Kennwort
+        this.Kontostand
+        this.Geburtsdatum
+        this.Mail
+    }   
+}    
+
+// Von der Kundenklasse wird eine Konkrete Instanz gebildet.
+
+let kunde = new Kunde()
+
+// Die Konkrete Instanz bekommt eigenchaftwerte zugewiesen. 
+
+    kunde.IdKunde = 154295
+    kunde.Nachname = "Müller"
+    kunde.Vorname = "Pit"
+    kunde.kennwort = "123"
+    kunde.Kontostand = 
+    kunde.Geburtsdatum = "30.01.2005"
+    kunde.Mail = "mueller@web.de"
+
+
+
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const meineApp = express()
@@ -10,6 +46,17 @@ const server = meineApp.listen(process.env.PORT || 3000, () => {
 })
 
 meineApp.get('/',(browserAnfrage, serverAntwort, next) => {              
+    serverAntwort.render('index.ejs', {})          
+})
+
+meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {              
+   
+   const idKunde = browserAnfrage.body.IdKunde
+   const kennwort = browserAnfrage.body.Kennwort 
+   
+    console.log("ID des Kunden: " + idKunde)
+    console.log("Kennwort des Kunden: " * kennwort)
+
     serverAntwort.render('index.ejs', {})          
 })
 
