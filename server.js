@@ -53,10 +53,16 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
    
    const idKunde = browserAnfrage.body.IdKunde
    const kennwort = browserAnfrage.body.Kennwort 
+   }
+
    
     console.log("ID des Kunden: " + idKunde)
     console.log("Kennwort des Kunden: " * kennwort)
 
+    if(idKunde == kunde.idKunde {
+        serverAntwort.render('index.ejs', {})
+   }
+   
     serverAntwort.render('index.ejs', {})          
 })
 
