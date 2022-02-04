@@ -53,17 +53,20 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
    
    const idKunde = browserAnfrage.body.IdKunde
    const kennwort = browserAnfrage.body.Kennwort 
-   }
+   
 
    
     console.log("ID des Kunden: " + idKunde)
-    console.log("Kennwort des Kunden: " * kennwort)
+    console.log("Kennwort des Kunden: " + kennwort)
 
-    if(idKunde == kunde.idKunde {
+    if(idKunde == kunde.IdKunde) {
         serverAntwort.render('index.ejs', {})
    }
-   
-    serverAntwort.render('index.ejs', {})          
+    else{serverAntwort.render('login.ejs', {})
+
+   }
+
+    serverAntwort.render('login.ejs', {})          
 })
 
 // Wenn die Login-Seite im Browser aufgerufen wird,...
@@ -78,3 +81,5 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
         serverAntwort.render('index.ejs', {})          
 })
 
+
+require('./Uebungen/ifUndElse')
