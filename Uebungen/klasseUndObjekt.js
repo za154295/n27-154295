@@ -41,7 +41,6 @@ if(spielerMueller.Alter >= 18){
     console.log("Der Spieler " + spielerMueller.Name + " ist volljährig.")
 }
 
-
 console.log(spielerMueller.Name)
 console.log(spielerMueller.Position)
 console.log("Der Spieler " + spielerMueller.Name + " hat die Nummer " + spielerMueller.Nummer + ".")
@@ -99,6 +98,45 @@ if(zeugnisMax.Fehlstunden > zeugnisPit.Fehlstunden){
 // d) Initialisieren Sie das Objekt mit Eigenschaftswerten
 
 
+// zu a) Die Objekte der realen Welt sind ein Müsliriegel und ein Getränk.
+
+// zu b) 
+
+class Sortiment {
+    constuctor(){
+        this.Preis
+        this.Menge
+        this.Regalplatz
+        this.Verfallsdatum
+    }
+}
+
+// zu c)
+
+let sortimentMuesliriegel = new Sortiment ()
+let sortimentGetraenk = new Sortiment ()
+
+// zu d)
+
+sortimentMuesliriegel.Preis = "3,95€"
+sortimentMuesliriegel.Menge = "300g"
+sortimentMuesliriegel.Regalplatz = "15"
+sortimentMuesliriegel.Verfallsdatum = "05.05.2022"
+
+sortimentGetraenk.Preis = "4,99€"
+sortimentGetraenk.Menge = "500ml"
+sortimentGetraenk.Regalplatz = "30"
+sortimentGetraenk.Verfallsdatum = "06.07.2022"
+
+console.log(sortimentMuesliriegel.Preis)
+console.log(sortimentMuesliriegel.Menge)
+console.log(sortimentMuesliriegel.Regalplatz)
+console.log(sortimentMuesliriegel.Verfallsdatum)
+
+console.log(sortimentGetraenk.Preis)
+console.log(sortimentGetraenk.Menge)
+console.log(sortimentGetraenk.Regalplatz)
+console.log(sortimentGetraenk.Verfallsdatum)
 
 
 
