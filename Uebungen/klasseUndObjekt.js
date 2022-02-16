@@ -71,6 +71,7 @@ class Zeugnis{
 // zu c) 
 
 let zeugnisPit = new Zeugnis()
+let zeugnisMax = new Zeugnis()
 
 // zu d) 
 
