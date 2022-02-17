@@ -70,29 +70,7 @@ class Zeugnis{
 
 // zu c) 
 
-let zeugnisPit = new Zeugnis()
-let zeugnisMax = new Zeugnis()
 
-// zu d) 
-
-zeugnisPit.PitSchuelerName = "Pit Kiff"
-zeugnisPit.Fehlstunden = 100
-zeugnisPit.Gesamtnote = 1
-
-zeugnisMax.PitSchuelerName = "max Muster"
-zeugnisMax.Fehlstunden = 10
-zeugnisMax.Gesamtnote = 2
-
-if(zeugnisMax.Fehlstunden > zeugnisPit.Fehlstunden){
-    console.log("Max Muster hat mehr Fehlstunden")
-}else{
-    console.log("Pitt Kiff hat mehr Fehlstunden")
-}
-
-
-
-// Übung 3
-// In einem Kiosk soll das Sortiment mit verwaltet werden. 
 // a) Identifizieren Sie das Objekt der realen Welt mit seinen relevanten Eigenschaften
 // b) Erstellen Sie die Klassendefinition
 // c) Instanzieren Sie ein Objekt der Klasse
@@ -149,12 +127,45 @@ console.log(sortimentGetraenk.Verfallsdatum)
 // c) Instanzieren Sie ein Objekt der Klasse
 // d) Initialisieren Sie das Objekt mit Eigenschaftswerten
 
+// zu a) Das Objekt der realen Welt ist der Kioskstand.
+
+// b) 
+class Kiosk{
+
+    constructor(){
+
+        this.Namen
+        this.Lage
+        this.Oeffnungszeiten
+        this.Personalanzahl
+        this.Angebot
+        this.Ausgaben
+        this.Einnahmen
+    }
+
+}
 
 
+// c)
+let standKiosk = new Kiosk
 
 
+// d)
+standKisok.Name = "Cafeteria"
+standKisok.Lage = "Turnhalle"
+standKiosk.Oeffnungszeiten = "10 Uhr bis 18 Uhr"
+standKiosk.Personalanzahl = 3
+standKisok.Angebot = "Cafe und Kuchen"
+standKiosk.Ausgaben = 500
+standKiosk.Einnahmen = 1000
 
 
+if(standKiosk.Einnahmen > standKiosk.Ausgaben){
 
+    console.log("Der Kiosk " + standKiosk.Name + " macht Gewinn. ")
 
+}else{
 
+    console.log("Der Kiosk " + standKiosk.Name + " macht keinen Gewinn")
+
+}
