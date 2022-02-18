@@ -26,8 +26,8 @@ let kunde = new Kunde()
     kunde.IdKunde = 154295
     kunde.Nachname = "Müller"
     kunde.Vorname = "Pit"
-    kunde.kennwort = "123"
-    kunde.Kontostand = 
+    kunde.Kennwort = "123"
+    kunde.Kontostand = "500"
     kunde.Geburtsdatum = "30.01.2005"
     kunde.Mail = "mueller@web.de"
 
@@ -45,8 +45,29 @@ const server = meineApp.listen(process.env.PORT || 3000, () => {
     console.log('Server lauscht auf Port %s', server.address().port)    
 })
 
-meineApp.get('/',(browserAnfrage, serverAntwort, next) => {              
-    serverAntwort.render('index.ejs', {})          
+
+// Die Methonde meineApp.get ('/'...) wird abgearbeitet, wenn wenn
+// der Kunde die Indexseite aufruft.
+
+meineApp.get('/',(browserAnfrage, serverAntwort, next) => {       
+    
+    // Wenn der Kunde bereits angemeldet ist, soll die 
+    // Index-Seite an den Browser gegeben werden.
+
+    if(true){
+        serverAntwort.render('index.ejs',{})
+    }else{
+
+        // Wenn der Kunde noch nicht eingeloggt ist, soll 
+        // Loginseite an den Browser zurückgegeben werden
+        serverAntwort.render('index.ejs',{
+            meldung : ""
+        })
+    }
+
+    serverAntwort.render('login.ejs', {
+        meldung : ""
+    })          
 })
 
 meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {              
@@ -59,14 +80,14 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
     console.log("ID des Kunden: " + idKunde)
     console.log("Kennwort des Kunden: " + kennwort)
 
-    if(idKunde == kunde.IdKunde) {
+    if(idKunde == kunde.IdKunde && kennwort == kunde.Kennwort){
         serverAntwort.render('index.ejs', {})
-   }
-    else{serverAntwort.render('login.ejs', {})
 
-   }
+   }else{serverAntwort.render('login.ejs', {
+       meldung : "Ihre Zugangsdaten stimmen nicht überein. Geben Sie Bitte die richtigen Daten ein"
+   })}
 
-    serverAntwort.render('login.ejs', {})          
+   
 })
 
 // Wenn die Login-Seite im Browser aufgerufen wird,...
@@ -74,7 +95,9 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {   
     // ... dann wird die login.ejs vom Lerver gerendert und an den
     // Browser zurückgegeben:    
-    serverAntwort.render('login.ejs', {})
+    serverAntwort.render('login.ejs', {
+        meldung : "Bitte geben sie Ihre Zugangsdaten ein"
+    })
 }) 
     // die meineApp.post('login') wird ausgeführt, sobald der Button auf dem Formular gedrückt wird.
 meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {   

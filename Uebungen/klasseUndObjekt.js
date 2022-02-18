@@ -130,6 +130,7 @@ console.log(sortimentGetraenk.Verfallsdatum)
 // zu a) Das Objekt der realen Welt ist der Kioskstand.
 
 // b) 
+
 class Kiosk{
 
     constructor(){
@@ -151,11 +152,11 @@ let standKiosk = new Kiosk
 
 
 // d)
-standKisok.Name = "Cafeteria"
-standKisok.Lage = "Turnhalle"
+standKiosk.Name = "Cafeteria"
+standKiosk.Lage = "Turnhalle"
 standKiosk.Oeffnungszeiten = "10 Uhr bis 18 Uhr"
 standKiosk.Personalanzahl = 3
-standKisok.Angebot = "Cafe und Kuchen"
+standKiosk.Angebot = "Cafe und Kuchen"
 standKiosk.Ausgaben = 500
 standKiosk.Einnahmen = 1000
 
