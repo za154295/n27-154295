@@ -37,9 +37,11 @@ let kunde = new Kunde()
 const express = require('express')
 const bodyParser = require('body-parser')
 const meineApp = express()
+const cookieParser = require('cookie-parser')
 meineApp.set('view engine', 'ejs')
 meineApp.use(express.static('public'))
 meineApp.use(bodyParser.urlencoded({extended: true}))
+meineApp.use(cookieParser('geheim'))
 
 const server = meineApp.listen(process.env.PORT || 3000, () => {
     console.log('Server lauscht auf Port %s', server.address().port)    
@@ -47,19 +49,25 @@ const server = meineApp.listen(process.env.PORT || 3000, () => {
 
 
 // Die Methonde meineApp.get ('/'...) wird abgearbeitet, wenn wenn
-// der Kunde die Indexseite aufruft.
+// der Kunde die Indexseite (localhost:3000 bzw.
+// n27.herokuapp.com) aufruft.
 
 meineApp.get('/',(browserAnfrage, serverAntwort, next) => {       
     
     // Wenn der Kunde bereits angemeldet ist, soll die 
     // Index-Seite an den Browser gegeben werden.
+    // Wenn ein signierter Cookie mit Namen 'istAngemeldetAls' im Browser vorhanden ist, 
+    // dann ist die Prüfung wahr und es wird die gerenderte Index-Seite an den Browser
+    // zurückgegeben. Anderemgfalls wird die Login-Seite an den Browser gegeben.
 
-    if(true){
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
         serverAntwort.render('index.ejs',{})
+
     }else{
 
         // Wenn der Kunde noch nicht eingeloggt ist, soll 
         // Loginseite an den Browser zurückgegeben werden
+
         serverAntwort.render('index.ejs',{
             meldung : ""
         })
@@ -70,7 +78,14 @@ meineApp.get('/',(browserAnfrage, serverAntwort, next) => {
     })          
 })
 
-meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {              
+// Die Methode meineApp('/login'...) wird abgeareitet, sobald
+// der Anwender im Login-Formukar auf "Einloggen" klickt.
+
+
+meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {  
+    
+    // Die im Browser eingegebene idKunde und Kennwort werden zugewiesen 
+    // an die Konstante idKunde und passwort.
    
    const idKunde = browserAnfrage.body.IdKunde
    const kennwort = browserAnfrage.body.Kennwort 
@@ -81,7 +96,17 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
     console.log("Kennwort des Kunden: " + kennwort)
 
     if(idKunde == kunde.IdKunde && kennwort == kunde.Kennwort){
+        
+        serverAntwort.cookie('istAngemeldetAls',JSON.stringify(kunde), {signed: true})
+        console.log("Der Cookie wurde erfolgreich gesetzt.")
+        
         serverAntwort.render('index.ejs', {})
+
+        // Ein cookie names 'istAngemeldetAls'wird im Browser gesetzt.
+        // Der Wert des Cookies ist das i eine Zeichenkette umgewandelte Kunden-Objekt.
+        // Der Cookie wird signiert, also gegen Manipulation geschützt.
+
+        
 
    }else{serverAntwort.render('login.ejs', {
        meldung : "Ihre Zugangsdaten stimmen nicht überein. Geben Sie Bitte die richtigen Daten ein"
@@ -99,6 +124,11 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
         meldung : "Bitte geben sie Ihre Zugangsdaten ein"
     })
 }) 
+
+
+serverAntwort.clearCookie('istAngemeldetAls')
+
+
     // die meineApp.post('login') wird ausgeführt, sobald der Button auf dem Formular gedrückt wird.
 meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {   
         serverAntwort.render('index.ejs', {})          
