@@ -126,7 +126,6 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
 }) 
 
 
-serverAntwort.clearCookie('istAngemeldetAls')
 
 
     // die meineApp.post('login') wird ausgeführt, sobald der Button auf dem Formular gedrückt wird.
