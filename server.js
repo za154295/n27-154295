@@ -120,6 +120,7 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {   
     // ... dann wird die login.ejs vom Lerver gerendert und an den
     // Browser zurückgegeben:    
+
     serverAntwort.render('login.ejs', {
         meldung : "Bitte geben sie Ihre Zugangsdaten ein"
     })
@@ -135,4 +136,12 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 
 
 // require('./Uebungen/ifUndElse')
-require('./Uebungen/klasseUndObjekt')
+// require('./Uebungen/klasseUndObjekt')
+
+
+meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {       
+    serverAntwort.render('about.ejs', {
+    })
+}) 
+
+
