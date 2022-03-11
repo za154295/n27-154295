@@ -14,6 +14,7 @@ class Kunde{
         this.Kontostand
         this.Geburtsdatum
         this.Mail
+        this.Telefonnummer
     }   
 }    
 
@@ -30,6 +31,8 @@ let kunde = new Kunde()
     kunde.Kontostand = "500"
     kunde.Geburtsdatum = "30.01.2005"
     kunde.Mail = "mueller@web.de"
+    kunde.Telefonnummer = "0123456789"
+
 
 
 
@@ -147,7 +150,19 @@ meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {       
     serverAntwort.render('profile.ejs', {
+        vorname: kunde.Vorname,
+        nachname: kunde.Nachname
     })
 }) 
 
+
+meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {       
+    serverAntwort.render('profile.ejs', {
+        vorname: kunde.Vorname,
+        nachname: kunde.Nachname,
+        mail: kunde.Mail,
+        geburtsdatum: kunde.Geburtsdatum
+
+    })
+}) 
 
