@@ -22,7 +22,7 @@ class Kunde{
 
 let kunde = new Kunde()
 
-// Die Konkrete Instanz bekommt eigenchaftwerte zugewiesen. 
+// Die Konkrete Instanz bekommt Eigenschaftwerte zugewiesen. 
 
     kunde.IdKunde = 154295
     kunde.Nachname = "Müller"
@@ -151,7 +151,11 @@ meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {
 meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {       
     serverAntwort.render('profile.ejs', {
         vorname: kunde.Vorname,
-        nachname: kunde.Nachname
+        nachname: kunde.Nachname,
+        mail: kunde.Mail,
+        geburtsdatum: kunde.Geburtsdatum,
+        telefonnummer: kunde.Telefonnummer
+        
     })
 }) 
 
@@ -161,7 +165,9 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
         vorname: kunde.Vorname,
         nachname: kunde.Nachname,
         mail: kunde.Mail,
-        geburtsdatum: kunde.Geburtsdatum
+        geburtsdatum: kunde.Geburtsdatum,
+        telefonnummer: kunde.Telefonnummer
+        
 
     })
 }) 

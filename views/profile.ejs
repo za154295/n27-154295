@@ -25,15 +25,22 @@
             </div>
         <div class="inhaltsbereich">
             <form method="post">
-                <label for="email">Email</label><br>
-                <input type="text" name="Email"><br>
-                <label for="lname">Kennwort:</label><br>
-                <input type="text" name="Kennwort"><br><br>        
-                <button class="save" formaction="/save">Speichern</button>
-                <br
-                <label></label><%= vorname %></label>
+            
+                <h2 form="vorname">Vorname:</label>
+                    <input class="input" value=<%= vorname %> readonly>
+                <h2 form="nachname">Nachname:</label>
+                    <input class="input" value=<%= nachname %> readonly>
+                <h2 form="email">Email:</label>
+                    <input class="input" value=<%= mail %> >
+                <h2 form="telefonnummer">Telefonnummer:</label>
+                    <input class="input" value=<%= telefonnummer %> >
+                <h2 form="geburtsdatum">Geburtsdatum</h2>
+                    <input class="input" value=<%= geburtsdatum %> readonly>    
                 <br>
-                <label><%= nachname %></label>
+                <br>
+                
+                
+                <button class="save" formaction="/save">Speichern</button>
             </form> 
 
              
