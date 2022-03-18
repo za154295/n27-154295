@@ -34,8 +34,24 @@
                     <input class="input" value=<%= mail %> >
                 <h2 form="telefonnummer">Telefonnummer:</label>
                     <input class="input" value=<%= telefonnummer %> >
-                <h2 form="geburtsdatum">Geburtsdatum</h2>
-                    <input class="input" value=<%= geburtsdatum %> readonly>    
+                <h2 form="geburtsdatum">Geburtsdatum:</h2>
+                    <input class="input" value=<%= geburtsdatum %> readonly> 
+                <h2 form="Idkunde">Kunden ID:</h2>
+                    <input class="input" value=<%= idKunde %> >   
+                <h2 form="password">Passwort:</h2>
+                    <input type="password" id="myInput" value=<%= kennwort %> >
+                    <h2>Passwort anzeigen</h2> <input type="checkbox" onclick="myFunction()">
+                     <script>
+                        function myFunction() {
+                        var x = document.getElementById("myInput");
+                        if (x.type === "password") {
+                            x.type = "text";
+                        } else {
+                            x.type = "password";
+                        }
+                        }
+                      </script>
+               
                 <br>
                 <br>
                 

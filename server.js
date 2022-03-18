@@ -24,7 +24,7 @@ let kunde = new Kunde()
 
 // Die Konkrete Instanz bekommt Eigenschaftwerte zugewiesen. 
 
-    kunde.IdKunde = 154295
+    kunde.IdKunde = "154295"
     kunde.Nachname = "Müller"
     kunde.Vorname = "Pit"
     kunde.Kennwort = "123"
@@ -154,7 +154,9 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
         nachname: kunde.Nachname,
         mail: kunde.Mail,
         geburtsdatum: kunde.Geburtsdatum,
-        telefonnummer: kunde.Telefonnummer
+        telefonnummer: kunde.Telefonnummer,
+        kennwort: kunde.Kennwort,
+        idKunde: kunde.IdKunde
         
     })
 }) 
@@ -166,8 +168,9 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
         nachname: kunde.Nachname,
         mail: kunde.Mail,
         geburtsdatum: kunde.Geburtsdatum,
-        telefonnummer: kunde.Telefonnummer
-        
+        telefonnummer: kunde.Telefonnummer,
+        kennwort: kunde.Kennwort,
+        idKunde: kunde.IdKunde
 
     })
 }) 
