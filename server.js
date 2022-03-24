@@ -161,6 +161,8 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
     })
 }) 
 
+// Sobald der Speichern-Button auf der Profile Seite gedrückt wird, 
+// wird die meineApp.post('profile'...) abgearbeitet.
 
 meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {       
     serverAntwort.render('profile.ejs', {
@@ -173,5 +175,25 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
         idKunde: kunde.IdKunde
 
     })
+
+    // Die im Browser eingegebenen Werte werden an den Server
+    // übermittelt und in konstante gespeichert.
+
+
+    kunde.Mail = browserAnfrage.body.Mail
+    kunde.Geburtsdatum = browserAnfrage.body.Geburtsdatum
+    kunde.Kennwort = browserAnfrage.body.Kennwort
+    kunde.IdKunde = browserAnfrage.body.IdKunde 
+    
+
+     console.log("Profil gespeichert.")
+    
+
+        serverAntwort.render('profile.ejs', {
+            
+            
+        })
 }) 
+
+
 
