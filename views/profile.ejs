@@ -9,7 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <i class="fa fa-info" aria-hidden="true"></i>
     <title>N27 - Mein Profil</title>
-
+    <script>
+        function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+        }
+      </script>
 </head>
 <body>
     <div class="rahmen">
@@ -25,34 +34,23 @@
                  
             </div>
         <div class="inhaltsbereich">
-            <form method="post">
-            
-                <h2 form="vorname">Vorname:</label>
-                    <input class="input" value=<%= vorname %> readonly>
-                <h2 form="nachname">Nachname:</label>
-                    <input class="input" value=<%= nachname %> readonly>
+            <form method="post">            
+                <h2 form="vorname">Vorname:</h2>
+                <input name="Vorname" class="input" value=<%= vorname %> readonly>
+                <h2 form="nachname">Nachname:</h2>
+                <input name="Nachname" class="input" value=<%= nachname %> readonly>
                 <h2 form="email">Email:</label>
-                    <input class="input" value=<%= mail %> >
-                <h2 form="telefonnummer">Telefonnummer:</label>
-                    <input class="input" value=<%= telefonnummer %> >
+                <input name="Mail" class="input" value=<%= mail %> >
+                <h2 form="telefonnummer">Telefonnummer:</h2>
+                <input name="Telefonnummer" class="input" value=<%= telefonnummer %> >
                 <h2 form="geburtsdatum">Geburtsdatum:</h2>
-                    <input class="input" value=<%= geburtsdatum %> readonly> 
+                <input name="Geburtsdatum" class="input" value=<%= geburtsdatum %> readonly> 
                 <h2 form="Idkunde">Kunden ID:</h2>
-                    <input class="input" value=<%= idKunde %> >   
+                <input class="input" value=<%= idKunde %> >   
                 <h2 form="password">Passwort:</h2>
-                    <input type="password" id="myInput" value=<%= kennwort %> >
-                    <h2>Passwort anzeigen</h2> <input type="checkbox" onclick="myFunction()">
-                     <script>
-                        function myFunction() {
-                        var x = document.getElementById("myInput");
-                        if (x.type === "password") {
-                            x.type = "text";
-                        } else {
-                            x.type = "password";
-                        }
-                        }
-                      </script>
-               
+                <input name ="Kennwort" type="password" id="myInput" value=<%= kennwort %> >
+                <h2>Passwort anzeigen</h2> <input type="checkbox" onclick="myFunction()">
+                          
                 <br>
                 <br>
                 

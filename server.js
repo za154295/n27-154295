@@ -24,14 +24,14 @@ let kunde = new Kunde()
 
 // Die Konkrete Instanz bekommt Eigenschaftwerte zugewiesen. 
 
-    kunde.IdKunde = "154295"
-    kunde.Nachname = "Müller"
-    kunde.Vorname = "Pit"
-    kunde.Kennwort = "123"
-    kunde.Kontostand = "500"
-    kunde.Geburtsdatum = "30.01.2005"
-    kunde.Mail = "mueller@web.de"
-    kunde.Telefonnummer = "0123456789"
+kunde.IdKunde = "154295"
+kunde.Nachname = "Müller"
+kunde.Vorname = "Pit"
+kunde.Kennwort = "123"
+kunde.Kontostand = "500"
+kunde.Geburtsdatum = "30.01.2005"
+kunde.Mail = "mueller@web.de"
+kunde.Telefonnummer = "0123456789"
 
 
 
@@ -132,11 +132,6 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
 
 
 
-    // die meineApp.post('login') wird ausgeführt, sobald der Button auf dem Formular gedrückt wird.
-meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {   
-        serverAntwort.render('index.ejs', {})          
-})
-
 
 // require('./Uebungen/ifUndElse')
 // require('./Uebungen/klasseUndObjekt')
@@ -165,7 +160,21 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
 // wird die meineApp.post('profile'...) abgearbeitet.
 
 meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {       
-    serverAntwort.render('profile.ejs', {
+   
+
+    // Die im Browser eingegebenen Werte werden an den Server
+    // übermittelt und in konstante gespeichert.
+
+
+    kunde.Mail = browserAnfrage.body.Mail
+    kunde.Geburtsdatum = browserAnfrage.body.Geburtsdatum
+    kunde.Kennwort = browserAnfrage.body.Kennwort
+    kunde.Telefonnummer = browserAnfrage.body.Telefonnummer
+
+     console.log("Profil gespeichert.")
+    
+
+     serverAntwort.render('profile.ejs', {
         vorname: kunde.Vorname,
         nachname: kunde.Nachname,
         mail: kunde.Mail,
@@ -175,24 +184,6 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
         idKunde: kunde.IdKunde
 
     })
-
-    // Die im Browser eingegebenen Werte werden an den Server
-    // übermittelt und in konstante gespeichert.
-
-
-    kunde.Mail = browserAnfrage.body.Mail
-    kunde.Geburtsdatum = browserAnfrage.body.Geburtsdatum
-    kunde.Kennwort = browserAnfrage.body.Kennwort
-    kunde.IdKunde = browserAnfrage.body.IdKunde 
-    
-
-     console.log("Profil gespeichert.")
-    
-
-        serverAntwort.render('profile.ejs', {
-            
-            
-        })
 }) 
 
 
