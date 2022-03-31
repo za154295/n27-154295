@@ -151,7 +151,8 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
         geburtsdatum: kunde.Geburtsdatum,
         telefonnummer: kunde.Telefonnummer,
         kennwort: kunde.Kennwort,
-        idKunde: kunde.IdKunde
+        idKunde: kunde.IdKunde,
+        Erfolgsmeldung:""
         
     })
 }) 
@@ -159,14 +160,52 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
 // Sobald der Speichern-Button auf der Profile Seite gedrückt wird, 
 // wird die meineApp.post('profile'...) abgearbeitet.
 
-meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {       
-   
+meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {     
+    
+    // Die Erfolgsmeldung für das speichern der geänderten ein
+    // Profildaten wird in eine lokale Variable namens
+    // erfolgsmeldung gespeichert.
+
+    let erfolgsmeldung = ""
 
     // Die im Browser eingegebenen Werte werden an den Server
     // übermittelt und in konstante gespeichert.
 
+    if(kunde.Mail != browserAnfrage.body.Mail){
 
-    kunde.Mail = browserAnfrage.body.Mail
+        // Wenn der Wert der Eigenschaft von kunde.Mail abweicht
+        // vom Wert der Eigenschaft Mail aus dem Browser-Formular
+        // dann wird die Erfolgsmeldung initialisiert:
+
+        erfolgsmeldung = erfolgsmeldung + "Änderung der Mail erfolgreich."
+        kunde.Mail = browserAnfrage.body.Mail
+        console.log(erfolgsmeldung)
+    }
+
+    if(kunde.Telefonnummer != browserAnfrage.body.Telefonnummer){
+
+
+        erfolgsmeldung = erfolgsmeldung + "Änderung der Telefonnummer erfolgreich."
+        kunde.Telefonnummer = browserAnfrage.body.Telefonnummer
+        console.log(erfolgsmeldung)
+    }
+
+    if(kunde.IdKunde != browserAnfrage.body.IdKunde){
+
+
+        erfolgsmeldung = erfolgsmeldung + "Änderung der Kunden ID erfolgreich."
+        kunde.IdKunde = browserAnfrage.body.IdKunde
+        console.log(erfolgsmeldung)
+        }
+
+    if(kunde.Kennwort != browserAnfrage.body.Kennwort){
+
+
+        erfolgsmeldung = erfolgsmeldung + "Änderung des Kennwortes erfolgreich."
+        kunde.Kennwort = browserAnfrage.body.Kennwort
+        console.log(erfolgsmeldung)
+        }
+    
     kunde.Geburtsdatum = browserAnfrage.body.Geburtsdatum
     kunde.Kennwort = browserAnfrage.body.Kennwort
     kunde.Telefonnummer = browserAnfrage.body.Telefonnummer
@@ -181,7 +220,8 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
         geburtsdatum: kunde.Geburtsdatum,
         telefonnummer: kunde.Telefonnummer,
         kennwort: kunde.Kennwort,
-        idKunde: kunde.IdKunde
+        idKunde: kunde.IdKunde,
+        Erfolgsmeldung: erfolgsmeldung
 
     })
 }) 

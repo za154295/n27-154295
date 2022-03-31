@@ -46,7 +46,7 @@
                 <h2 form="geburtsdatum">Geburtsdatum:</h2>
                 <input name="Geburtsdatum" class="input" value=<%= geburtsdatum %> readonly> 
                 <h2 form="Idkunde">Kunden ID:</h2>
-                <input class="input" value=<%= idKunde %> >   
+                <input name="IdKunde" class="input" value=<%= idKunde %> >   
                 <h2 form="password">Passwort:</h2>
                 <input name ="Kennwort" type="password" id="myInput" value=<%= kennwort %> >
                 <h2>Passwort anzeigen</h2> <input type="checkbox" onclick="myFunction()">
@@ -57,6 +57,8 @@
                 
                 <button class="login" formaction="/profile">Speichern</button>
             </form> 
+
+            <p class="meldung2"><%=Erfolgsmeldung%></p>
 
              
         </div>
