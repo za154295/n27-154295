@@ -75,11 +75,15 @@ meineApp.get('/',(browserAnfrage, serverAntwort, next) => {
             meldung : ""
         })
     }
+    
 
     serverAntwort.render('login.ejs', {
         meldung : ""
     })          
 })
+
+
+
 
 // Die Methode meineApp('/login'...) wird abgeareitet, sobald
 // der Anwender im Login-Formukar auf "Einloggen" klickt.
@@ -131,15 +135,24 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
 
 
 
-
-
 // require('./Uebungen/ifUndElse')
 // require('./Uebungen/klasseUndObjekt')
 
+// Wenn der anmelde cookie gestezt ist, wird der Nutzer zur 
+// about-Seite gelenkt.
 
-meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {       
-    serverAntwort.render('about.ejs', {
-    })
+
+meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {   
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+
+        serverAntwort.render('about.ejs',{})
+    
+    }else{
+        serverAntwort.render('login.ejs',{
+            meldung : ""
+        })
+    }
 }) 
 
 
