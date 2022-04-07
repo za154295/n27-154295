@@ -7,13 +7,13 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>N27 - Über uns</title>
+    <title>N27 - Support</title>
 
 </head>
 <body>
     <div class="rahmen">
         <div class="kopf">
-            <h1>N27 - Impressum</h1>            
+            <h1>N27 - Support</h1>            
         </div>
         <div class="navigationsleiste">
              <a href="/about"><i class="fa fa-info fa-3x" aria-hidden="true" title="Impressum"></i></a> ---
@@ -21,21 +21,19 @@
              <a href="/"><i class="fa fa-home fa-3x" aria-hidden="true" title="Startseite"></i></a> --
              <a href="/profile"><i class="fa fa-user fa-3x" aria-hidden="true" title="Profil"></i></a> --
              <a href="/support"><i class="fa fa-question fa-3x" aria-hidden="true" title="Support"></i></a>
- 
 
         </div>
         <div class="inhaltsbereich">
-            <h2>Über uns</h2>
-            <p>N27 Bank AG</p>
-            <p>Arne J. Zender</p>
-            <p>Hauptsitz:</p>
-            <p>Josefstr. 10</p>
-            <p>46325 Borken</p>
-            <p>Bankleitzahl: 27 000 000</p>
- 
-            <h2>Kontakt</h2>
-            <p>Telefon: 01234 56789</p>
-            <p>E-Mail: test@gmail.com</p>
+            <h2 form="vorname">Vorname:</label>
+            <input name="Vorname" class="input" value=<%= vorname %> readonly>
+            <h2 form="nachname">Nachname:</label>
+            <input name="Nachname" class="input" value=<%= nachname %> readonly>
+            <h2 form="email">Email:</label>
+            <input name="Mail" class="input" value=<%= mail %> readonly >
+            <h2 form="telefonnummer">Telefonnummer:</label>
+            <input name="Telefonnummer" class="input" value=<%= telefonnummer %> readonly>
+            <h2 form="filiale">Filiale:</label>
+            <input name="Filiale" class="input" value=<%= filiale %> readonly> </input>
             
 
 

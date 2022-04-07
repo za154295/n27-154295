@@ -33,6 +33,28 @@ kunde.Geburtsdatum = "30.01.2005"
 kunde.Mail = "mueller@web.de"
 kunde.Telefonnummer = "0123456789"
 
+class Kundenberater{
+    constructor(){
+        this.IdBerater
+        this.Nachname
+        this.Vorname
+        this.Filliale
+        this.Mail
+        this.Telefonnummer
+    }
+}
+
+let kundenberater = new Kundenberater()
+
+kundenberater.IdBerater = "234567"
+kundenberater.Nachname = "Gärtner"
+kundenberater.Vorname = "Manuel"
+kundenberater.Filliale = "Borken-Weseke"
+kundenberater.Mail = "gaertner@n27.com"
+kundenberater.Telefonnummer = "987654321"
+
+
+
 
 
 
@@ -239,5 +261,25 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
     })
 }) 
 
+
+
+meineApp.get('/support',(browserAnfrage, serverAntwort, next) => {   
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+
+        serverAntwort.render('support.ejs',{
+            vorname: kundenberater.Vorname,
+            nachname: kundenberater.Nachname,
+            mail: kundenberater.Mail,
+            filiale: kundenberater.Filiale,
+            telefonnummer: kundenberater.Telefonnummer    
+        })
+    
+    }else{
+        serverAntwort.render('login.ejs',{
+            meldung : ""
+        })
+    }
+}) 
 
 
