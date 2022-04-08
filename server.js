@@ -38,7 +38,7 @@ class Kundenberater{
         this.IdBerater
         this.Nachname
         this.Vorname
-        this.Filliale
+        this.Filiale
         this.Mail
         this.Telefonnummer
     }
@@ -49,7 +49,7 @@ let kundenberater = new Kundenberater()
 kundenberater.IdBerater = "234567"
 kundenberater.Nachname = "Gärtner"
 kundenberater.Vorname = "Manuel"
-kundenberater.Filliale = "Borken-Weseke"
+kundenberater.Filiale = "Borken-Weseke"
 kundenberater.Mail = "gaertner@n27.com"
 kundenberater.Telefonnummer = "987654321"
 
@@ -263,13 +263,15 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
 
 
 
-meineApp.get('/support',(browserAnfrage, serverAntwort, next) => {   
+meineApp.get('/support',(browserAnfrage, serverAntwort, next) => { 
+      
 
     if(browserAnfrage.signedCookies['istAngemeldetAls']){
 
         serverAntwort.render('support.ejs',{
             vorname: kundenberater.Vorname,
             nachname: kundenberater.Nachname,
+            idberater: kundenberater.IdBerater,
             mail: kundenberater.Mail,
             filiale: kundenberater.Filiale,
             telefonnummer: kundenberater.Telefonnummer    
