@@ -93,15 +93,13 @@ meineApp.get('/',(browserAnfrage, serverAntwort, next) => {
         // Wenn der Kunde noch nicht eingeloggt ist, soll 
         // Loginseite an den Browser zurückgegeben werden
 
-        serverAntwort.render('index.ejs',{
+        serverAntwort.render('login.ejs',{
             meldung : ""
         })
     }
     
 
-    serverAntwort.render('login.ejs', {
-        meldung : ""
-    })          
+       
 })
 
 
@@ -148,7 +146,9 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {   
     // ... dann wird die login.ejs vom Lerver gerendert und an den
-    // Browser zurückgegeben:    
+    // Browser zurückgegeben:   
+    
+    serverAntwort.clearCookie('istAngemeldetAls')
 
     serverAntwort.render('login.ejs', {
         meldung : "Bitte geben sie Ihre Zugangsdaten ein"
@@ -264,7 +264,7 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
 
 
 meineApp.get('/support',(browserAnfrage, serverAntwort, next) => { 
-      
+  
 
     if(browserAnfrage.signedCookies['istAngemeldetAls']){
 
