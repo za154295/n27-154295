@@ -11,12 +11,14 @@ class Kunde{
         this.Nachname
         this.Vorname
         this.Kennwort
-        this.Kontostand
         this.Geburtsdatum
         this.Mail
         this.Telefonnummer
     }   
 }    
+
+
+
 
 // Von der Kundenklasse wird eine Konkrete Instanz gebildet.
 
@@ -55,7 +57,21 @@ kundenberater.Telefonnummer = "987654321"
 
 
 
+class Kontostand{
+    constructor(){
+        this.Kontostand
+        this.Iban
+        this.Art
+        this.Kennwort
+    }
+}
 
+let kontostand = new Kontostand()
+
+kontostand.Kontostand = "670,53"
+kontostand.Iban = "DE48 1234 5678 9010 1112 13"
+kontostand.Art = "Tagesgeldkonto"
+kontostand.Kennwort = ""
 
 
 
