@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>N27 - Mein Profil</title>
+    <script>
+        function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+        }
+      </script>
+</head>
+<body>
+    <div class="rahmen">
+        <div class="kopf">
+            <h1>N27 - Profil</h1>            
+        </div>
+        <div class="navigationsleiste">
+            <a href="/about"><i class="fa fa-info fa-3x" aria-hidden="true" title="Impressum"></i></a> ---
+            <a href="/login"><i class="fa fa-sign-out fa-3x" title="Abmelden"></i></a> --
+            <a href="/"><i class="fa fa-home fa-3x" aria-hidden="true"title="Startseite">
+            </i></a> --
+            <a href="/profile"><i class="fa fa-user fa-3x" aria-hidden="true" title="Profil"></i></a> --
+            <a href="/support"><i class="fa fa-question fa-3x" aria-hidden="true" title="Support"></i></a>
+
+
+            </div>
+        <div class="inhaltsbereich">
+            <form method="post">            
+                <h2 form="vorname">Vorname:</label>
+                <input name="Vorname" class="input" value=<%= vorname %> readonly>
+                <h2 form="nachname">Nachname:</label>
+                <input name="Nachname" class="input" value=<%= nachname %> readonly>
+                <h2 form="email">Email:</label>
+                <input name="Mail" class="input" value=<%= mail %> >
+                <h2 form="telefonnummer">Telefonnummer:</label>
+                <input name="Telefonnummer" class="input" value=<%= telefonnummer %> >
+                <h2 form="geburtsdatum">Geburtsdatum:</label>
+                <input name="Geburtsdatum" class="input" value=<%= geburtsdatum %> readonly> 
+                <h2 form="Idkunde">Kunden ID:</label>
+                <input name="IdKunde" class="input" value=<%= idKunde %> >   
+                <h2 form="password">Passwort:</label>
+                <input name ="Kennwort" type="password" id="myInput" value=<%= kennwort %> >
+                <h2>Passwort anzeigen</h2> <input type="checkbox" onclick="myFunction()">
+                          
+                <br>
+                <br>
+                
+                
+                <button class="login" formaction="/profile">Speichern</button>
+            </form> 
+
+            <p class="meldung2"><%=Erfolgsmeldung%></p>
+
+             
+        </div>
+        <div class="fusszeile">
+            &copy; 2022 GW21A
+        </div>
+    </div>
+</body>
+</html>
