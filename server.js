@@ -11,12 +11,14 @@ class Kunde{
         this.Nachname
         this.Vorname
         this.Kennwort
-        this.Kontostand
         this.Geburtsdatum
         this.Mail
         this.Telefonnummer
     }   
 }    
+
+
+
 
 // Von der Kundenklasse wird eine Konkrete Instanz gebildet.
 
@@ -55,7 +57,21 @@ kundenberater.Telefonnummer = "987654321"
 
 
 
+class Konto{
+    constructor(){
+        this.Kontostand
+        this.Iban
+        this.Art
+        this.Pin
+    }   
+}
 
+let konto= new Konto()
+
+konto.Kontostand = 670,53
+konto.Iban = "DE48 1234 5678 9010 1112 13"
+konto.Art = "Tagesgeldkonto"
+konto.Kennwort = ""
 
 
 
@@ -99,9 +115,7 @@ meineApp.get('/',(browserAnfrage, serverAntwort, next) => {
     }
     
 
-    serverAntwort.render('login.ejs', {
-        meldung : ""
-    })          
+       
 })
 
 
@@ -148,7 +162,11 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {   
     // ... dann wird die login.ejs vom Lerver gerendert und an den
+
     // Browser zurückgegeben:  
+
+    // Browser zurückgegeben:   
+
     
     serverAntwort.clearCookie('istAngemeldetAls')
 
@@ -161,8 +179,8 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
 
 
 
-// require('./Uebungen/ifUndElse')
-// require('./Uebungen/klasseUndObjekt')
+require('./Uebungen/ifUndElse')
+require('./Uebungen/klasseUndObjekt')
 
 // Wenn der anmelde cookie gestezt ist, wird der Nutzer zur 
 // about-Seite gelenkt.
@@ -268,7 +286,7 @@ meineApp.post('/profile',(browserAnfrage, serverAntwort, next) => {
 
 
 meineApp.get('/support',(browserAnfrage, serverAntwort, next) => { 
-      
+  
 
     if(browserAnfrage.signedCookies['istAngemeldetAls']){
 
@@ -292,22 +310,17 @@ meineApp.get('/support',(browserAnfrage, serverAntwort, next) => {
 
 
 
-meineApp.get('/KontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {       
-    
+meineApp.get('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {     
 
-    if(browserAnfrage.signedCookies['istAngemeldetAls']){
-        serverAntwort.render('KontostandAnzeigen.ejs',{})
-
-    }else{
-        serverAntwort.render('login.ejs',{
+        if(browserAnfrage.signedCookies['istAngemeldetAls']){
+            serverAntwort.render('kontostandAnzeigen.ejs',{
+                meldung : ""
+            })
+        }else{
+            serverAntwort.render('login.ejs', {
             meldung : ""
-        })
+        })  
     }
-    
-
-    serverAntwort.render('login.ejs', {
-        meldung : ""
-    })          
 })
 
 
