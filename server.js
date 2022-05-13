@@ -179,8 +179,10 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
 
 
 
-require('./Uebungen/ifUndElse')
-require('./Uebungen/klasseUndObjekt')
+//require('./Uebungen/ifUndElse')
+//require('./Uebungen/klasseUndObjekt')
+
+require('./Uebungen/klausur2')
 
 // Wenn der anmelde cookie gestezt ist, wird der Nutzer zur 
 // about-Seite gelenkt.
