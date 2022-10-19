@@ -17,9 +17,6 @@ class Kunde{
     }   
 }    
 
-
-
-
 // Von der Kundenklasse wird eine Konkrete Instanz gebildet.
 
 let kunde = new Kunde()
@@ -34,6 +31,8 @@ kunde.Kontostand = "500"
 kunde.Geburtsdatum = "30.01.2005"
 kunde.Mail = "mueller@web.de"
 kunde.Telefonnummer = "0123456789"
+
+//------------------------------------------
 
 class Kundenberater{
     constructor(){
@@ -55,7 +54,7 @@ kundenberater.Filiale = "Borken-Weseke"
 kundenberater.Mail = "gaertner@n27.com"
 kundenberater.Telefonnummer = "987654321"
 
-
+//-------------------------------------------
 
 class Konto{
     constructor(){
@@ -72,6 +71,23 @@ konto.Kontostand = 670,53
 konto.Iban = "DE48 1234 5678 9010 1112 13"
 konto.Art = "Tagesgeldkonto"
 konto.Kennwort = ""
+
+//-------------------------------------------
+
+class Kredit{
+    constructor(){
+        this.Zinssatz
+        this.Laufzeit
+        this.Betrag
+    }
+
+    // eine Funktion berechnet etwas. Im Namen der Funktion steht also immer ein Verb.
+
+    berechneGesamtkostenKreditNachEinemJahr(){
+        return this.Betrag * this.Zinssatz / 100 + this.Betrag
+    }
+}
+
 
 
 
@@ -182,7 +198,7 @@ meineApp.get('/login',(browserAnfrage, serverAntwort, next) => {
 //require('./Uebungen/ifUndElse')
 //require('./Uebungen/klasseUndObjekt')
 
-require('./Uebungen/klausur2')
+//require('./Klausuren/220118klausur2')
 
 // Wenn der anmelde cookie gestezt ist, wird der Nutzer zur 
 // about-Seite gelenkt.
@@ -324,5 +340,24 @@ meineApp.get('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {
         })  
     }
 })
+
+
+
+meineApp.get('/zinsBerechnen',(browserAnfrage, serverAntwort, next) => {     
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+        serverAntwort.render('zinsBerechnen.ejs',{
+            meldung : ""
+        })
+    }else{
+        serverAntwort.render('login.ejs', {
+        meldung : ""
+    })  
+}
+})
+
+
+require('./Klausuren/221026 Klausur.js')
+
 
 
