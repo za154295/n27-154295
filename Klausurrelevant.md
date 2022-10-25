@@ -6,7 +6,7 @@
 
 und auch die IfUndElse.js
 
-//  === Typgleich  == Wertgleich#
+//  === Typgleich  == Wertgleich
 
 3. Für ein Objekt müssen relevante Eigenschaften gefunden werden. Deklaration, Instanziierung und Initialisierung müssen durchgeführt und verstanden werden.
 

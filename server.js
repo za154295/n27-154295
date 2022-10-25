@@ -356,8 +356,6 @@ meineApp.get('/zinsBerechnen',(browserAnfrage, serverAntwort, next) => {
 }
 })
 
-
 require('./Klausuren/221026 Klausur.js')
-
 
 
