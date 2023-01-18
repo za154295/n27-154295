@@ -1,3 +1,119 @@
+// Das instalierte MySQL Modul wird mit require() eingebunden.
+// Das MySQL-Modul stellt die Vebindung zwischen der App und der
+// MySQL-Datenbank her. 
+// Eine Datenbank wird benötigt, wenn Daten auch nach der laufzeit des 
+// Programms noch weiter existieren sollen.
+// Außerdem ermöglicht die Datenbank, dass z.B. Geldüberweisungen 
+// zwischen Anwendern möglich werden
+
+
+
+
+var mysql = require('mysql');
+
+// Die verbing zur Datebank wird hergestellt. Dazu werden die
+// Adressen und die Anmeldedaten der Datenbank angegeben.
+
+var dbVerbindung = mysql.createConnection({
+    host: "10.40.38.110",
+    user: "placematman",
+    password: "BKB123456!",
+    database: "dbn27"
+  });
+  
+  dbVerbindung.connect(function(err) {
+    if (err) throw err;
+
+    // Wenn die Verbindung aufgebaut werden kann, wird der Erfolg 
+    // auf der Konsole angelegt. 
+
+    console.log("Connected!");
+  });
+
+  // Die Verbindung zur Datenbank wird geöffnet.
+/*
+dbVerbindung.connect(function(fehler){
+
+    // Die Tabelle namens kunde wird ertsellt. 
+    // Die Spalten heißen: idKunde, vorname, nachname, ort, kennwort, mail
+    // Varchar(45)    : legt den Datentyp der Spalte auf "Text" mit der Länge max. 45 Zeichen fest
+    // INT(11)        : begrenzt die Eingabe
+    // Float/Double   : sind Gleichkommazahlen
+    // Smallint       : Zahlen von 0-65535
+    // Date/Datetime  : steht für ein datum bzw. eine Uhrzeit
+    // idKunde ist primary key. Das bedeutet, dass die idKunde den DFatensatz eindeutig 
+    // kennzeichnet. Das wiedrum bedeutet, dass kein zweiter Kunde mit derselben idKunde 
+    // angelegt werden kann.
+
+    dbVerbindung.query('CREATE TABLE kunde(idKunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), ort VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY(idKunde));', function (fehler) {
+            
+        // Falls ein Problem mit der Query aufkommt, ...
+
+        if (fehler) {   
+
+            //... und den Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
+            if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
+
+            //... dann wird eine Fehlermeldung geloggt. 
+             console.log("Tabelle kunde existiert bereits und wird nicht angelegt.")
+            }else{
+                console.log("Fehler: " + fehler )
+            }
+        }else{
+            console.log("Tabelle Kunde erfolgreich angelegt.")
+        }
+    })
+});
+
+    dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail) VALUES (154297, "Arne", "Zender", "BOR", "123!", "pk@web.de")'), function (fehler){  
+            
+        // Falls ein Problem mit der Query aufkommt, ...
+
+        if (fehler) {   
+
+        //... und den Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
+        if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
+
+            //... dann wird eine Fehlermeldung geloggt. 
+             console.log("Tabelle kunde existiert bereits und wird nicht angelegt.")
+        }else{
+             console.log("Fehler: " + fehler )
+    }
+        }else{
+    console.log("Tabelle Kunde erfolgreich angelegt.")
+    }
+    };
+
+    dbVerbindung.query('CREATE TABLE kunde(idKunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), ort VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY(idKunde));', function (fehler) {
+    
+        // Falls ein Problem bei der Query aufkommt, ...
+        
+        if (fehler) {
+        
+            // ... und der Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
+    
+            if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
+    
+                //... dann wird eine Fehlermdldung geloggt. 
+    
+                console.log("Tabelle kunde existiert bereits und wird nicht angelegt.")
+            
+            }else{
+                console.log("Fehler: " + fehler )
+            }
+        }else{
+                console.log("Tabelle Kunde erfolgreich angelegt.")
+             }
+        })
+    ;
+
+
+*/
+    
+
+
+
+
 // Programme verarbeiten oft Objekte der Realen Welt. 
 // Objekte haben Eigenschaften. 
 // In unserem Bankingprogramm interessieren uns Objekte, 
@@ -79,6 +195,7 @@ class Kredit{
         this.Zinssatz
         this.Laufzeit
         this.Betrag
+        this.IdKunde
     }
 
     // eine Funktion berechnet etwas. Im Namen der Funktion steht also immer ein Verb.
@@ -138,7 +255,7 @@ meineApp.get('/',(browserAnfrage, serverAntwort, next) => {
 
 
 // Die Methode meineApp('/login'...) wird abgeareitet, sobald
-// der Anwender im Login-Formukar auf "Einloggen" klickt.
+// der Anwender im Login-Formular auf "Einloggen" klickt.
 
 
 meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {  
@@ -356,6 +473,41 @@ meineApp.get('/zinsBerechnen',(browserAnfrage, serverAntwort, next) => {
 }
 })
 
-require('./Klausuren/221026 Klausur.js')
+//require('./Klausuren/221026 Klausur.js')
 
+// Die funktion meineApp.get ('/kontoAnlegen'...wird abgearbeitet, sobald die Seite 
+// konto anlegen im Browser aufgerufen wird.)
+meineApp.get('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {    
+    
+    // Es wird geprüft, ob der User angemeldet ist also ob der Cookie gesetzt ist. 
 
+    serverAntwort.render('kontoAnlegen.ejs', {
+        
+        
+    })
+}) 
+
+meineApp.post('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {  
+    
+    const idKunde = browserAnfrage.body.kontoArt
+
+   
+    console.log("Gewählte Kontoart: " + kontoArt)
+    
+
+    if(idKunde == kunde.IdKunde && kennwort == kunde.Kennwort){
+        
+        serverAntwort.cookie('istAngemeldetAls',JSON.stringify(kunde), {signed: true})
+        console.log("Der Cookie wurde erfolgreich gesetzt.")
+        
+        serverAntwort.render('index.ejs', {})
+
+    
+        
+
+   }else{serverAntwort.render('login.ejs', {
+       meldung : "Ihre Zugangsdaten stimmen nicht überein. Geben Sie Bitte die richtigen Daten ein"
+   })}
+
+   
+})
