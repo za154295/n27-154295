@@ -24,7 +24,7 @@
     </div>
 
     <div class="inhaltsbereich">
-      <from method="post">
+      <form method="post">
         <label for="kontoArt">Kontoart wählen:</label><br>
         <select id="kontoArt" name="kontoArt">
             <option value="girokonto">Girokonto</option>
@@ -32,7 +32,8 @@
         </select>
         
         <button class="login" formaction="/kontoAnlegen"><i class="fa fa-book" aria-hidden="true"></i> Neues Konto anlegen</button>
-      </from>
+      </form>
+      <%= Erfolgsmeldung %>
     </div>
     <div class="fusszeile">
         &copy; 2023 GW21A
