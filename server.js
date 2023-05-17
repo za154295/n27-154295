@@ -26,6 +26,7 @@ var dbVerbindung = mysql.createConnection({
     // melden wir uns auf dem Datenbankserver an und starten die MySQL-Workbench.
 
     host: "10.40.38.110",
+    //host: "130.255.124.99",
     user: "placematman",
     password: "BKB123456!",
     database: "dbn27"
@@ -140,7 +141,7 @@ dbVerbindung.connect(function(fehler){
 
 // Ein Kunde soll neu in der Datenbank angelegt werden.
 
-dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail) VALUES (154295, "Pit", "Kiff", "BOR", "123!", "pk@web.de") ;', function (fehler) {
+dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail) VALUES (150000, "Pit", "Kiff", "BOR", "123!", "pk@web.de") ;', function (fehler) {
       
     // Falls ein Problem bei der Query aufkommt, ...
     
@@ -204,7 +205,7 @@ let kunde = new Kunde()
 
 
 
-kunde.IdKunde = 154295
+kunde.IdKunde = 150000
 kunde.Nachname = "Müller"
 kunde.Vorname = "Pit"
 kunde.Geburtsdatum = "23.10.2000"
@@ -336,7 +337,7 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 
         serverAntwort.cookie('istAngemeldetAls',JSON.stringify(kunde),{signed:true})
         console.log("Der Cookie wurde erfolgreich gesetzt.")
-
+        
         // Nachdem der Kunde erfolgreich eingeloggt ist, werden seine Konten aus der Datenbank eingelesen
         
         console.log("Jetzt werden die Konten eingelesen")
@@ -401,7 +402,7 @@ meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {
 meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {              
 
     if(browserAnfrage.signedCookies['istAngemeldetAls']){
-
+        
         serverAntwort.render('profile.ejs', {
             Vorname: kunde.Vorname,
             Nachname: kunde.Nachname,
@@ -419,7 +420,7 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.get('/support',(browserAnfrage, serverAntwort, next) => {              
 
-    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){        
         serverAntwort.render('support.ejs', {
             Vorname: kundenberater.Vorname,
             Nachname: kundenberater.Nachname,
@@ -555,7 +556,7 @@ meineApp.get('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {
         // Mit FROM wird die Tabelle angegeben, aus der der Result eingelesen werden soll.
         // Mit WHERE wird der Result zeilenweise aus der Tabelle gefiltert
 
-        dbVerbindung.query('SELECT * FROM konto WHERE idKunde = 154295;', function (fehler, result) {      
+        dbVerbindung.query('SELECT * FROM konto WHERE idKunde = 150000;', function (fehler, result) {      
             console.log(result)
 
             // Die Index-Seite wird an den Browser gegeben (man sagt auch gerendert):
@@ -635,7 +636,7 @@ meineApp.post('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {
 
     // Für die generierte IBAN muss ein neuer Datensatz in der Tabelle konto angelegt werden.
 
-    dbVerbindung.query('INSERT INTO konto(iban, idKunde, anfangssaldo, kontoart, timestamp) VALUES ("' + iban + '", 154295, 1, "' + kontoArt + '", NOW()) ;', function (fehler) {
+    dbVerbindung.query('INSERT INTO konto(iban, idKunde, anfangssaldo, kontoart, timestamp) VALUES ("' + iban + '", 150000, 1, "' + kontoArt + '", NOW()) ;', function (fehler) {
       
         // Falls ein Problem bei der Query aufkommt, ...
         
@@ -661,7 +662,130 @@ meineApp.post('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {
     
 })
 
+meineApp.get('/ueberweisungTaetigen',(browserAnfrage, serverAntwort, next) => {              
+    
+    // Wenn ein signierter Cookie mit Namen 'istAngemeldetAls' im Browser vorhanden ist,
+    // dann ist die Prüfung WAHR und die Anweisungen im Rumpf der if-Kontrollstruktur 
+    // werden abgearbeitet.
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+        
+        // Ein Objekt vom Typ Kunde wird deklariert und instanziiert.
+
+        let kunde = new Kunde()
+
+        // Das Objekt Kunde wird mit der Funktion JSON.parse() aus dem Cookie gewonnen.
+
+        kunde = JSON.parse(browserAnfrage.signedCookies['istAngemeldetAls'])
+        
+        // Anschließend kann das Kundenobjekt mit seinen Eigenschaftswerten aus-
+        // gelesen werden.
+        
+        console.log(kunde.IdKunde)
+
+        // In MySQL werden Abfragen gegen die Datenbank wie folgt formuliert:
+        // Der Abfragebefehl beginnt mit SELECT.
+        // Anschließend wird die interessierende Spalte angegeben. 
+        // Mehrere interessierende Spalten werden mit Komma getrennt angegeben.
+        // Wenn alle Spalten ausgewählt werden sollen, kann vereinfachend * angegeben werden.
+        //   Beispiele: 'SELECT iban, anfangssaldo FROM ...' oder 'SELECT * FROM ...'
+        // Mit FROM wird die Tabelle angegeben, aus der der Result eingelesen werden soll.
+        // Mit WHERE wird der Result zeilenweise aus der Tabelle gefiltert
+
+        dbVerbindung.query('SELECT * FROM konto WHERE idKunde = ' + kunde.IdKunde + ';', function (fehler, result) {      
+            console.log(result)
+
+            // Die Index-Seite wird an den Browser gegeben (man sagt auch gerendert):
+
+            serverAntwort.render('ueberweisungTaetigen.ejs',{
+                MeineIbans: result,
+                Kontostand: konto.Kontostand,
+                IBAN: konto.IBAN,
+                Kontoart: konto.Kontoart,
+                Erfolgsmeldung: ""
+            })
+        })
+    }else{
+
+        // Wenn der Kunde noch nicht eigeloggt ist, soll
+        // die Loginseite an den Browser zurückgegeben werden.
+
+        serverAntwort.render('login.ejs', {
+            Meldung: ""
+        })
+    }                 
+})
+
+// Wenn der Button namens Überweisung tätigen gedrückt wird, wird die Funktion abgearbeitet.
+
+meineApp.post('/ueberweisungTaetigen',(browserAnfrage, serverAntwort, next) => {              
+
+    const absenderIban = browserAnfrage.body.AbsenderIban
+    console.log("IBAN des Absenders: " + absenderIban)
+
+    dbVerbindung.query('SELECT * FROM konto WHERE iban = "' + absenderIban + '";', function (fehler, result) {      
+        console.log(result)
+
+        // Der Result besteht möglicherweise aus vielen Datensätzen.
+        // Um den Result auf den ersten Datensatz zu begrenzen, wird [0] hinter
+        // dem Result angegeben. Zuletzt wird die Eigenschaft anfangssaldo mit Punkt
+        // angehängt. Der zweite Datensatz würde mit result[1].anfangssaldo ausgelesen.
+
+        console.log("Anfangssaldo:" + result[0].anfangssaldo)
+
+        // Der String (=Zeichenkette) wird zugewiesen (=) an eine Variable namens erfolgsmeldung 
+        let erfolgsmeldung = "Die Überweisung wurde ausgeführt."
+
+        // Die Werte aus dem Formular werden eingelesen
+        
+        const betrag = browserAnfrage.body.Betrag
+        console.log("Überweisungsbetrag: " + betrag)
+        const verwendungszweck = browserAnfrage.body.Verwendungszweck
+        console.log("Verwendungszweck: " + verwendungszweck)
+        const empfaengerIban = browserAnfrage.body.EmpfaengerIban
+        console.log("IBAN des Empfängers: " + empfaengerIban)
+    
+        // Empfänger-IBAN auf Gültigkeit prüfen: Die Funktion isValid() wird auf das 
+        // IBAN-Modul aufgerufen. Als Parameter in den runden Klammern wird die
+        // Empfänger-IBAN übergeben. Die Funktion isValid() gibt entweder den Wert
+        // true oder false zurück.
+
+        if(IBAN.isValid(empfaengerIban)){
+            erfolgsmeldung = "Die Empfänger-IBAN ist gültig."
+        }else{
+            erfolgsmeldung = "Die Empfänger-IBAN ist ungültig."
+        }    
+
+        // Prüfung, ob der Kontostand des Absenders ausreicht:
+        // Der gewünschte Überweisungsbetrag wird mit dem ausgelesenen Kontostand
+        // verglichen. Wenn der Betrag kleiner oder gleich dem Kontostand ist,
+        // dann ist das Konto des Absenders gedeckt.
+
+        if(betrag <= result[0].anfangssaldo){
+            // Der Wert der Variablen erfolgsmeldung wird ergänzt um die weitere Meldung
+            erfolgsmeldung = erfolgsmeldung + " Das Konto des Absenders ist gedeckt."
+        }else{
+            erfolgsmeldung = erfolgsmeldung + " Das Konto des Absenders ist nicht gedeckt."
+        }
+
+        // Überweisung in die Datenbank schreiben
+
+        
+
+        serverAntwort.render('ueberweisungTaetigen.ejs', {        
+            Erfolgsmeldung: erfolgsmeldung,
+            MeineIbans: "",
+            AbsenderIban: absenderIban,
+            Betrag: betrag,
+            Verwendungszweck: verwendungszweck,
+            empfaengerIban: empfaengerIban
+    
+        })
+    })
+})
+
+
 //require('./Uebungen/ifUndElse.js')
 //require('./Uebungen/klasseUndObjekt.js')
 //require('./Klausuren/20221026_klausur.js')
-//require('./Klausuren/20230111_klausur.js
+//require('./Klausuren/20230111_klausur.js')

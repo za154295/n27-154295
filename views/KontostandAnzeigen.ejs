@@ -34,7 +34,18 @@
 
         </div>
         <div class="inhaltsbereich">
-            
+            <form method="post">
+                <select id="kontoArt" name="kontoArt">
+                    <% for (var i=0; i < MeineIbans.length; i++){ %>
+                        <option value="<%= MeineIbans[i].iban %>"><%= MeineIbans[i].iban %></option>
+                    <% } %>
+                </select>
+                    <label>Kontoart:</label><br>
+                    <input type="text" name="Kontoart" readonly value=<%= MeineIbans[0].kontoart %>  ><br>
+                    <label>Kontostand:</label><br>
+                    <input type="number" name="Kontostand" readonly value=<%= MeineIbans[0].anfangssaldo %>  ><br>
+                </select>
+            </form>
 
         </div>
         <div class="fusszeile">
