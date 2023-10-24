@@ -7,12 +7,12 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>N27 - Kontostand anzeigen</title>
+    <title>N27 - Kontobewegungf anzeigen</title>
 </head>
 <body>
     <div class="rahmen">
         <div class="kopf">
-            <h1>N27 - Kontostand anzeigen</h1>
+            <h1>N27 - Kontobewegung anzeigen</h1>
         </div>
         <div class="navigationsleiste">            
             <a href="/">
@@ -50,7 +50,7 @@
                 <input type="text" name="Kontoart" readonly value=<%= MeineIbans[0].kontoart %>  ><br>
                 <label>Kontostand:</label><br>
                 <input type="number" name="Kontostand" readonly value=<%= MeineIbans[0].anfangssaldo %>  ><br>
-                <button class="login" formaction="/kontostandAnzeigen">Bitte ein Konto auswählen</button>
+                <button class="login" formaction="/kontobewegungAnzeigen">Bitte ein Konto auswählen</button>
             </form>   
             <p class="erfolgsmeldung"><%= Erfolgsmeldung %></p>
         </div>

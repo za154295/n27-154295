@@ -34,35 +34,27 @@
 
 
             </div>
-        <div class="inhaltsbereich">
-            <form method="post">            
-                <h2 form="vorname">Vorname:</label>
-                <input name="Vorname" class="input" value=<%= vorname %> readonly>
-                <h2 form="nachname">Nachname:</label>
-                <input name="Nachname" class="input" value=<%= nachname %> readonly>
-                <h2 form="email">Email:</label>
-                <input name="Mail" class="input" value=<%= mail %> >
-                <h2 form="telefonnummer">Telefonnummer:</label>
-                <input name="Telefonnummer" class="input" value=<%= telefonnummer %> >
-                <h2 form="geburtsdatum">Geburtsdatum:</label>
-                <input name="Geburtsdatum" class="input" value=<%= geburtsdatum %> readonly> 
-                <h2 form="Idkunde">Kunden ID:</label>
-                <input name="IdKunde" class="input" value=<%= idKunde %> >   
-                <h2 form="password">Passwort:</label>
-                <input name ="Kennwort" type="password" id="myInput" value=<%= kennwort %> >
-                <h2>Passwort anzeigen</h2> <input type="checkbox" onclick="myFunction()">
-                          
-                <br>
-                <br>
-                
-                
+            <div class="inhaltsbereich">
+            <form method="post">
+                <label>Vorname:</label><br>
+                <input type="text" name="Vorname" readonly value=<%= Vorname %>  ><br>
+                <label>Nachname:</label><br>
+                <input type="text" name="Nachname" value=<%= Nachname %> readonly><br>        
+                <label>Mail:</label><br>
+                <input type="email" name="Mail" value=<%= Mail %>  ><br>
+                <label>Kennwort:</label><br>
+                <input type="password" name="Kennwort" value=<%= Kennwort %>  ><br>
+                <label>Rufnummer:</label><br>
+                <input type="tel" name="Rufnummer" value=<%= Rufnummer %>  ><br>
                 <button class="login" formaction="/profile"><i class="fa fa-floppy-o" aria-hidden="true"></i>  Speichern</button>
-            </form> 
-
-            <p class="meldung2"><%=Erfolgsmeldung%></p>
+            </form>   
+            <p class="erfolgsmeldung"><%= Erfolgsmeldung %></p>
+        </div>
+                
+            
 
              
-        </div>
+        
         <div class="fusszeile">
             &copy; 2023 GW21A
         </div>

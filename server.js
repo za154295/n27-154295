@@ -139,9 +139,41 @@ dbVerbindung.connect(function(fehler){
     })
 });
 
+// Datenbanken können verhindern, dass z.B. ein Konto gelöscht wird, zu dem es noch
+// Kontobewegungen gibt. Das ist ein Sicherheitsmechanismus. In der CREATE TABLE ...
+// muss am Ende ergänzt werden: FOREIGN KEY (absenderIban) REFERENCES konto(iban)
+// Das bedeutet, dass zu der absenderIban in der Kontobewegung-Tabelle eine Iban
+// in der Kontotabelle existiert. Bevor ein Konto gelöscht werden kann, müssen alle
+// Kontobewegungen gelöscht werden. Man sagt dazu, dass eine LÖSCHANOMALIE verhindert
+// wird. Ebenso kann keine Kontobewegung angelegt werden zu einem Konto, dass es nicht
+// gibt. Das würde man EINFÜGEANOMALIE nennen.
+
+
+dbVerbindung.query('CREATE TABLE kontobewegung(timestamp TIMESTAMP, betrag SMALLINT, empfaengerIban VARCHAR(45), verwendungszweck VARCHAR(45), absenderIban VARCHAR(45), name VARCHAR(45), PRIMARY KEY(empfaengerIban,timestamp), FOREIGN KEY (absenderIban) REFERENCES konto(iban));', function (fehler) {
+      
+    // Falls ein Problem bei der Query aufkommt, ...
+    
+    if (fehler) {
+    
+        // ... und der Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
+
+        if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
+
+            //... dann wird eine Fehlermdldung geloggt. 
+
+            console.log("Tabelle kontobewegung existiert bereits und wird nicht angelegt.")
+        
+        }else{
+            console.log("Fehler: " + fehler )
+        }
+    }else{
+            console.log("Tabelle kredit erfolgreich angelegt.")
+    }
+})
+
 // Ein Kunde soll neu in der Datenbank angelegt werden.
 
-dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail) VALUES (150000, "Pit", "Kiff", "BOR", "123!", "pk@web.de") ;', function (fehler) {
+dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail) VALUES (154295, "Arne", "Zender", "BOR", "123", "az@web.de") ;', function (fehler) {
       
     // Falls ein Problem bei der Query aufkommt, ...
     
@@ -279,7 +311,8 @@ konto.Kontoart = "Giro"
 const express = require('express')
 const bodyParser = require('body-parser')
 const meineApp = express()
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const { DECIMAL } = require('mysql/lib/protocol/constants/types');
 meineApp.set('view engine', 'ejs')
 meineApp.use(express.static('public'))
 meineApp.use(bodyParser.urlencoded({extended: true}))
@@ -329,34 +362,49 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
 
     // Die Identität des Kunden wird überprüft.
     
-    if(idKunde == kunde.IdKunde && kennwort == kunde.Kennwort){
+    dbVerbindung.query('SELECT * FROM kunde WHERE idKunde = ' + idKunde + ' AND kennwort ="' + kennwort + '";', function (fehler, result) {      
+        
+        console.log(result)
+
+        if(result.length === 1){
     
-        // Ein Cookie namens 'istAngemeldetAls' wird beim Browser gesetzt.
-        // Der Wert des Cookies ist das in eine Zeichenkette umgewandelte Kunden-Objekt.
-        // Der Cookie wird signiert, also gegen Manpulationen geschützt.
+            // Ein Cookie namens 'istAngemeldetAls' wird beim Browser gesetzt.
+            // Der Wert des Cookies ist das in eine Zeichenkette umgewandelte Kunden-Objekt.
+            // Der Cookie wird signiert, also gegen Manpulationen geschützt.
+    
+            serverAntwort.cookie('istAngemeldetAls',JSON.stringify(kunde),{signed:true})
+            console.log("Der Cookie wurde erfolgreich gesetzt.")
+            
+            // Nachdem der Kunde erfolgreich eingeloggt ist, werden seine Konten aus der Datenbank eingelesen
+            
+            console.log("Jetzt werden die Konten eingelesen")
+    
+            // Wenn die Id des Kunden mit der Eingabe im Browser übereinstimmt
+            // UND ("&&") das Kennwort ebenfalls übereinstimmt,
+            // dann gibt der Server die gerenderte Index-Seite zurück.
+            
+            serverAntwort.render('index.ejs', {})
+        }else{
+    
+            // Wenn entweder die eingegebene Id oder das Kennwort oder beides
+            // nicht übereinstimmt, wird der Login verweigert. Es wird dann die
+            // gerenderte Login-Seite an den Browser zurückgegeben.
+    
+            serverAntwort.render('login.ejs', {
+                Meldung : "Ihre Zugangsdaten scheinen nicht zu stimmen."
+            })
+        }
+    })
 
-        serverAntwort.cookie('istAngemeldetAls',JSON.stringify(kunde),{signed:true})
-        console.log("Der Cookie wurde erfolgreich gesetzt.")
-        
-        // Nachdem der Kunde erfolgreich eingeloggt ist, werden seine Konten aus der Datenbank eingelesen
-        
-        console.log("Jetzt werden die Konten eingelesen")
 
-        // Wenn die Id des Kunden mit der Eingabe im Browser übereinstimmt
-        // UND ("&&") das Kennwort ebenfalls übereinstimmt,
-        // dann gibt der Server die gerenderte Index-Seite zurück.
-        
-        serverAntwort.render('index.ejs', {})
-    }else{
 
-        // Wenn entweder die eingegebene Id oder das Kennwort oder beides
-        // nicht übereinstimmt, wird der Login verweigert. Es wird dann die
-        // gerenderte Login-Seite an den Browser zurückgegeben.
 
-        serverAntwort.render('login.ejs', {
-            Meldung : "Ihre Zugangsdaten scheinen nicht zu stimmen."
-        })
-    }
+
+
+
+
+
+    
 })
 
 
@@ -451,6 +499,43 @@ meineApp.get('/kreditBerechnen',(browserAnfrage, serverAntwort, next) => {
         })
     }              
 })
+
+// Die Funktion meineApp.post('/kreditBe... wird ausgeführt, wenn  der Button gedrückt wird.
+
+meineApp.post('/kreditBerechnen',(browserAnfrage, serverAntwort, next) => {              
+
+    // Der Wert der Variablen namens Betrag aus dem Formular in der EJS-Datei
+    // wird einer Variablen namens betrag zugewiesen.
+    let betrag = browserAnfrage.body.Betrag
+    
+    // Der Wert der Variablen namens Betrag wird zu einem String verkettet
+    // und im Terminal ausgegeben.
+    console.log("Betrag: " + betrag)
+
+    let laufzeit = browserAnfrage.body.Laufzeit
+    console.log("Laufzeit: " + laufzeit)
+
+    let zinssatz = browserAnfrage.body.Zinssatz
+    console.log("Zinssatz: " + zinssatz)
+
+    // Annahme: Jedes Jahr werden die angefallenen Zinsen überwiesen:
+
+    let kreditkosten = betrag * zinssatz / 100 * laufzeit
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+        serverAntwort.render('kreditBerechnen.ejs', {
+            Betrag: betrag,
+            Laufzeit: laufzeit,
+            Zinssatz: zinssatz,
+            Erfolgsmeldung:"Ihre Kreditkosten betragen: " + kreditkosten
+        })
+    }else{
+        serverAntwort.render('login.ejs',{
+            Meldung: ""
+        })
+    }              
+})
+
 
 // Die Funktion meineApp.get('/kontoAnlegen'...  wird abgearbeitet, sobald die Seite
 // kontoanlegen im Browser aufgerufen wird.
@@ -562,6 +647,9 @@ meineApp.get('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {
             // Die Index-Seite wird an den Browser gegeben (man sagt auch gerendert):
 
             serverAntwort.render('kontostandAnzeigen.ejs',{
+
+                // Der result wird an die ejs-Seite übergeben und steckt dann in dem Attribut MeineIbans
+                // Der Datentyp von MeineIbans ist dann eine Liste
                 MeineIbans: result,
                 Kontostand: konto.Kontostand,
                 IBAN: konto.IBAN,
@@ -580,6 +668,82 @@ meineApp.get('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {
     }                 
 })
 
+// Wenn der Button "Bitte ein Konto auswählen" gedrückt wird, wird die
+// meineApp.post-Funktion abgearbeitet.
+
+meineApp.post('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {              
+
+    // Es wird eine Variable namens index instanziert. Beim Schleifendurchauf 
+    // wird index der Wert der ausgewählten Variablen zugewiesen
+
+    var index
+
+    // Eine Verbindung zur DB wird ausgewählt. Alle Zeilen werden ausgewählt, in denen die idKunde 1500000 ist.
+    // Das Ergebnis, das die DB uns zurückgibt steckt im result.
+
+    dbVerbindung.query('SELECT * FROM konto WHERE idKunde = 150000;', function (fehler, result) {      
+        
+        // Der result (alle meine Konten) wird auf der Console geloggt.
+        
+        console.log(result)
+
+        console.log("Ausgewähltes Element:")
+
+        // Die IBAN, die im Select ausgewählt wurde, wird auf der Console geloggt.
+
+        console.log(browserAnfrage.body.iban)   
+    
+        // Der Wert der Variablen iban aus der Browseranfrage wird der Variablen ausgewaehltesKontoIban zugewiesen. 
+
+        var ausgewaehltesKontoIban = browserAnfrage.body.iban
+
+        // Mit der for-Schleife wird der result solange durchlaufen, bis der Wert von 
+        // ausgewaehltesKonto mit dem Wert des durchlaufenen Kontos übereinstimmt.
+
+        // Zur For-Scheife: Eine For-Schleife besteht immer aus drei Teilen:
+        // let i = 0: Eine Variable namens i wird mit 0 initialisiert.
+        // i <= result.length: Die Schleife wird solange durchlaufen, bis die Anzahl der
+        //                     Elemente im result erreicht ist.
+        // i++:  i wird mit jedem Schleifendurchlauf um 1 hochgezählt
+
+        for (let i = 0; i <= result.length; i++) {
+           
+            // Wenn der Wert der Variablen ausgewaehltesKontoIban mit dem 
+            // gerade in der Schleife durchlaufenen Element aus dem result übereinstimmt, ...
+
+           if(ausgewaehltesKontoIban === result[i].iban){
+            
+                // ... dann werden die Eigenschften des Kontos aus dem result geloggt:
+            
+                console.log("Kontoart des ausgewählten Kontos:")
+                console.log(result[i].kontoart)
+                console.log("Kontostand des ausgewählten Kontos:")
+                console.log(result[i].anfangssaldo) 
+                console.log("Index des ausgewählten Kontos:")
+                console.log(i)
+                index = i            
+                
+                // Sobald das gewünschte Element gefunden wurde, verlassen wir die Schleife
+                // mit dem Befehl break: 
+
+                break;
+           }
+        }
+
+        // Die Index-Seite wird an den Browser gegeben (man sagt auch gerendert):
+
+        serverAntwort.render('kontostandAnzeigen.ejs',{
+
+            // Der result wird an die ejs-Seite übergeben und steckt dann in dem Attribut MeineIbans
+            // Der Datentyp von MeineIbans ist dann eine Liste
+            MeineIbans: result,
+            Kontostand: result[index].anfangssaldo,
+            IBAN: result[index].iban,
+            Kontoart: result[index].kontoart,
+            Erfolgsmeldung: ""
+        })
+    })
+})
 
 // Die Funktion meineApp.post('/kontoAnlegen'... wird abgearbeitet, sobald der Button 
 // auf der kontoAnlegen-Seite gedrückt wird und das Formular abgesendet ('gepostet') wird.
@@ -720,10 +884,18 @@ meineApp.get('/ueberweisungTaetigen',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.post('/ueberweisungTaetigen',(browserAnfrage, serverAntwort, next) => {              
 
+    // Der Wert von "AbsenderIban" aus der Browseranfrage wird zugewiesen (=)
+    // an eine Konstante namens absenderIban.
+    
     const absenderIban = browserAnfrage.body.AbsenderIban
+        
     console.log("IBAN des Absenders: " + absenderIban)
 
-    dbVerbindung.query('SELECT * FROM konto WHERE iban = "' + absenderIban + '";', function (fehler, result) {      
+    // Die Datenbank wird abgefragt und der passende Datensatz mit allen Attributwerten (*)
+    // zur abesenderIban als result an den Server übergeben.
+
+    dbVerbindung.query('SELECT * FROM konto WHERE iban = "' + absenderIban + '";', function (fehler, result) {
+        
         console.log(result)
 
         // Der Result besteht möglicherweise aus vielen Datensätzen.
@@ -731,18 +903,24 @@ meineApp.post('/ueberweisungTaetigen',(browserAnfrage, serverAntwort, next) => {
         // dem Result angegeben. Zuletzt wird die Eigenschaft anfangssaldo mit Punkt
         // angehängt. Der zweite Datensatz würde mit result[1].anfangssaldo ausgelesen.
 
-        console.log("Anfangssaldo:" + result[0].anfangssaldo)
+        console.log("Anfangssaldo: " + result[0].anfangssaldo)
 
         // Der String (=Zeichenkette) wird zugewiesen (=) an eine Variable namens erfolgsmeldung 
+        
         let erfolgsmeldung = "Die Überweisung wurde ausgeführt."
 
         // Die Werte aus dem Formular werden eingelesen
         
         const betrag = browserAnfrage.body.Betrag
+        
         console.log("Überweisungsbetrag: " + betrag)
+        
         const verwendungszweck = browserAnfrage.body.Verwendungszweck
+        
         console.log("Verwendungszweck: " + verwendungszweck)
+        
         const empfaengerIban = browserAnfrage.body.EmpfaengerIban
+        
         console.log("IBAN des Empfängers: " + empfaengerIban)
     
         // Empfänger-IBAN auf Gültigkeit prüfen: Die Funktion isValid() wird auf das 
@@ -751,38 +929,285 @@ meineApp.post('/ueberweisungTaetigen',(browserAnfrage, serverAntwort, next) => {
         // true oder false zurück.
 
         if(IBAN.isValid(empfaengerIban)){
+            
+            // Wenn die empfaengerIban gültig ist, dann wird der String "Erfolg" 
+            // der Variablen namens erfolgsmeldung zugewiesen.
+            
             erfolgsmeldung = "Die Empfänger-IBAN ist gültig."
-        }else{
-            erfolgsmeldung = "Die Empfänger-IBAN ist ungültig."
-        }    
-
-        // Prüfung, ob der Kontostand des Absenders ausreicht:
-        // Der gewünschte Überweisungsbetrag wird mit dem ausgelesenen Kontostand
-        // verglichen. Wenn der Betrag kleiner oder gleich dem Kontostand ist,
-        // dann ist das Konto des Absenders gedeckt.
-
-        if(betrag <= result[0].anfangssaldo){
-            // Der Wert der Variablen erfolgsmeldung wird ergänzt um die weitere Meldung
-            erfolgsmeldung = erfolgsmeldung + " Das Konto des Absenders ist gedeckt."
-        }else{
-            erfolgsmeldung = erfolgsmeldung + " Das Konto des Absenders ist nicht gedeckt."
-        }
-
-        // Überweisung in die Datenbank schreiben
-
         
+            // Prüfung, ob der Kontostand des Absenders ausreicht:
+            // Der gewünschte Überweisungsbetrag wird mit dem ausgelesenen Kontostand
+            // verglichen. Wenn der Betrag kleiner oder gleich dem Kontostand ist,
+            // dann ist das Konto des Absenders gedeckt.
 
-        serverAntwort.render('ueberweisungTaetigen.ejs', {        
-            Erfolgsmeldung: erfolgsmeldung,
-            MeineIbans: "",
-            AbsenderIban: absenderIban,
-            Betrag: betrag,
-            Verwendungszweck: verwendungszweck,
-            empfaengerIban: empfaengerIban
-    
+            if(betrag <= result[0].anfangssaldo){
+                
+                // Der String "Das Konto ..." wird verkettet (+) mit dem Wert der Variablen
+                // erfolgsmeldung und dann zugewiesen (=) an die Variable namens Erfolgsmeldung.
+                
+                erfolgsmeldung = erfolgsmeldung + " Das Konto des Absenders ist gedeckt."
+
+                // Überweisung in die Datenbank schreiben:
+
+                // Zuerst wird zwischen der inneren Klammer der Betrag vom anfngssaldo abgezogen.
+                // Danach wird alles miteinander verkettet.
+            
+                console.log("Neuer Anfangssaldo des Absenders: " + (parseFloat(result[0].anfangssaldo) - parseFloat(betrag)))
+
+                // Es muss für jede Überweisung ein neuer Datensatz in der Tabelle kontobewegung
+                // eingefügt werden (INSERT INTO)
+
+                dbVerbindung.query('INSERT INTO kontobewegung(timestamp, betrag, empfaengerIban, verwendungszweck, absenderIban, name) VALUES (NOW(), 100, "DE123Empf", "Verwendungszweck", "DE05270000009708846254", "MeinName") ;', function (fehler) {
+                    console.log("fehler:")            
+                    console.log(fehler)            
+                })
+
+                // Das Konto des Empfängers muss abgefragt werden, um den Anfangssaldo erhöhen zu können.
+                
+                dbVerbindung.query('SELECT anfangssaldo FROM konto WHERE iban = "' + empfaengerIban + '";', function (fehler, resultEmpfaenger) {
+
+                    // Der erste Datensatz (Zeile) des Results wird mit [0] gefiltert. Das gewünschte Attribut wird mit
+                    // ".anfangssaldo" (Spalte) an den resultEmpfaenger[0] angehangen.
+
+                    console.log("Anfangssaldo des Empfängers vor der Überweisung: " + resultEmpfaenger[0].anfangssaldo)
+                
+                    // Die Gutschrift auf dem Empfängerkonto muss in die DB geschrieben werden:
+
+                    dbVerbindung.query('UPDATE konto SET anfangssaldo = ' + (parseFloat(resultEmpfaenger[0].anfangssaldo) + parseFloat(betrag)) + ' WHERE iban = "' + empfaengerIban + '";', function (fehler, result) {      
+                    })
+
+                    // Mit dem += Operator wird die Zeichenkette um einen weiteren String
+                    // verlängert.
+
+                    erfolgsmeldung += "Die Überweisung wurde erfolgreich ausgeführt. "        
+                })
+            }else{
+                erfolgsmeldung = erfolgsmeldung + " Das Konto des Absenders ist nicht gedeckt."
+            }        
+        }else{            
+            erfolgsmeldung = "Die Empfänger-IBAN ist ungültig."            
+        }
+        dbVerbindung.query('SELECT * FROM konto WHERE idKunde = ' + kunde.IdKunde + ';', function (fehler, resultMeineIbans) { 
+
+            serverAntwort.render('ueberweisungTaetigen.ejs', {        
+                Erfolgsmeldung: erfolgsmeldung,
+                MeineIbans: resultMeineIbans,
+                AbsenderIban: absenderIban,
+                Betrag: betrag,
+                Verwendungszweck: verwendungszweck,
+                empfaengerIban: empfaengerIban    
+            })
         })
     })
 })
+
+meineApp.get('/kontobewegungAnzeigen',(browserAnfrage, serverAntwort, next) => {              
+    
+    // Wenn ein signierter Cookie mit Namen 'istAngemeldetAls' im Browser vorhanden ist,
+    // dann ist die Prüfung WAHR und die Anweisungen im Rumpf der if-Kontrollstruktur 
+    // werden abgearbeitet.
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+        
+        // In MySQL werden Abfragen gegen die Datenbank wie folgt formuliert:
+        // Der Abfragebefehl beginnt mit SELECT.
+        // Anschließend wird die interessierende Spalte angegeben. 
+        // Mehrere interessierende Spalten werden mit Komma getrennt angegeben.
+        // Wenn alle Spalten ausgewählt werden sollen, kann vereinfachend * angegeben werden.
+        //   Beispiele: 'SELECT iban, anfangssaldo FROM ...' oder 'SELECT * FROM ...'
+        // Mit FROM wird die Tabelle angegeben, aus der der Result eingelesen werden soll.
+        // Mit WHERE wird der Result zeilenweise aus der Tabelle gefiltert
+
+        dbVerbindung.query('SELECT * FROM konto WHERE idKunde = 150000;', function (fehler, result) {      
+            console.log(result)
+
+            dbVerbindung.query('SELECT * FROM kontobewegung WHERE absenderIban = "' + result[0].AbsenderIban + '";', function (fehler, resultKontobewegung) {       
+        
+                console.log("Kontobewegungen zu Konto " + ausgewaehltesKontoIban + ":")
+                console.log(resultKontobewegung)
+             
+                // Die Index-Seite wird an den Browser gegeben (man sagt auch gerendert):
+
+                serverAntwort.render('kontobewegungAnzeigen.ejs',{
+
+                    // Der result wird an die ejs-Seite übergeben und steckt dann in dem Attribut MeineIbans
+                    // Der Datentyp von MeineIbans ist dann eine Liste
+                    MeineIbans: result,
+                    Kontostand: konto.Kontostand,
+                    IBAN: konto.IBAN,
+                    Kontobewegungen: resultKontobewegung,
+                    Erfolgsmeldung: ""
+                })
+            })
+        })
+    }else{
+
+        // Wenn der Kunde noch nicht eigeloggt ist, soll
+        // die Loginseite an den Browser zurückgegeben werden.
+
+        serverAntwort.render('login.ejs', {
+            Meldung: ""
+        })
+    }                 
+})
+
+// Wenn der Button "Bitte ein Konto auswählen" gedrückt wird, wird die
+// meineApp.post-Funktion abgearbeitet.
+
+meineApp.post('/kontobewegungAnzeigen',(browserAnfrage, serverAntwort, next) => {              
+
+    // Es wird eine Variable namens index instanziert. Beim Schleifendurchauf 
+    // wird index der Wert der ausgewählten Variablen zugewiesen
+
+    var index
+
+    // Eine Verbindung zur DB wird ausgewählt. Alle Zeilen werden ausgewählt, in denen die idKunde 1500000 ist.
+    // Das Ergebnis, das die DB uns zurückgibt steckt im result.
+
+    dbVerbindung.query('SELECT * FROM konto WHERE idKunde = 150000;', function (fehler, result) {      
+        
+        // Der result (alle meine Konten) wird auf der Console geloggt.
+        
+        console.log(result)
+
+        console.log("Ausgewähltes Element:")
+
+        // Die IBAN, die im Select ausgewählt wurde, wird auf der Console geloggt.
+
+        console.log(browserAnfrage.body.iban)   
+    
+        // Der Wert der Variablen iban aus der Browseranfrage wird der Variablen ausgewaehltesKontoIban zugewiesen. 
+
+        var ausgewaehltesKontoIban = browserAnfrage.body.iban
+
+        // Mit der for-Schleife wird der result solange durchlaufen, bis der Wert von 
+        // ausgewaehltesKonto mit dem Wert des durchlaufenen Kontos übereinstimmt.
+
+        // Zur For-Scheife: Eine For-Schleife besteht immer aus drei Teilen:
+        // let i = 0: Eine Variable namens i wird mit 0 initialisiert.
+        // i <= result.length: Die Schleife wird solange durchlaufen, bis die Anzahl der
+        //                     Elemente im result erreicht ist.
+        // i++:  i wird mit jedem Schleifendurchlauf um 1 hochgezählt
+
+        for (let i = 0; i <= result.length; i++) {
+           
+            // Wenn der Wert der Variablen ausgewaehltesKontoIban mit dem 
+            // gerade in der Schleife durchlaufenen Element aus dem result übereinstimmt, ...
+
+           if(ausgewaehltesKontoIban === result[i].iban){
+            
+                // ... dann werden die Eigenschften des Kontos aus dem result geloggt:
+            
+                console.log("Kontoart des ausgewählten Kontos:")
+                console.log(result[i].kontoart)
+                console.log("Kontostand des ausgewählten Kontos:")
+                console.log(result[i].anfangssaldo) 
+                console.log("Index des ausgewählten Kontos:")
+                console.log(i)
+                index = i            
+                
+                // Sobald das gewünschte Element gefunden wurde, verlassen wir die Schleife
+                // mit dem Befehl break: 
+
+                break;
+           }
+        }
+
+        dbVerbindung.query('SELECT * FROM kontobewegung WHERE absenderIban = "' + ausgewaehltesKontoIban + '";', function (fehler, resultKontobewegung) {       
+        
+            console.log("Kontobewegungen zu Konto " + ausgewaehltesKontoIban + ":")
+            console.log(resultKontobewegung)
+        
+            // Die Index-Seite wird an den Browser gegeben (man sagt auch gerendert):
+
+            serverAntwort.render('kontobewegungAnzeigen.ejs',{
+
+                // Der result wird an die ejs-Seite übergeben und steckt dann in dem Attribut MeineIbans
+                // Der Datentyp von MeineIbans ist dann eine Liste
+                MeineIbans: result,
+                Kontostand: result[index].anfangssaldo,
+                IBAN: result[index].iban,
+                Kontobewegungen: resultKontobewegung,
+                Erfolgsmeldung: ""
+            })
+        })
+    })
+})
+
+meineApp.get('/geldAnlegen',(browserAnfrage, serverAntwort, next) => {              
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+        serverAntwort.render('geldAnlegen.ejs', {
+            Betrag: "",
+            Laufzeit: "",
+            Zinssatz:"",
+            Erfolgsmeldung:""
+        })
+    }else{
+        serverAntwort.render('login.ejs',{
+            Meldung: ""
+        })
+    }              
+})
+
+// Die Funktion meineApp.post('/geldAn... wird ausgeführt, wenn  der Button gedrückt wird.
+
+meineApp.post('/geldAnlegen',(browserAnfrage, serverAntwort, next) => {              
+
+    // Der Wert der Variablen namens Betrag aus dem Formular in der EJS-Datei
+    // wird einer Variablen namens betrag zugewiesen.
+    let betrag = browserAnfrage.body.Betrag
+    
+    // Der Wert der Variablen namens Betrag wird zu einem String verkettet
+    // und im Terminal ausgegeben.
+    console.log("Betrag: " + betrag)
+
+    // Aus der Browseranfrage wird die Variable namens
+    // Laufzeit ausgelesen und einer lokalen Variablen
+    // namens laufzeit zugewisen.
+    let laufzeit = browserAnfrage.body.Laufzeit
+    console.log("Laufzeit: " + laufzeit)
+
+    //Aus der Browseranfrage wird die Variable namens
+    // Zinssatz ausgelesen und an eine lokale Variable 
+    // namens zinssatz zugewiesen.
+    let zinssatz = browserAnfrage.body.Zinssatz
+    console.log("Zinssatz: " + zinssatz)
+
+    // Wenn die Laufzeit 0 Jahre beträgt, wird die Schleife nicht durch-
+    // laufen und der Rückzahungsbetrag entspricht dem eingezahlten Betrag.
+    let rückzahlungsbetrag = parseFloat(betrag)
+
+
+    // Eine For-Schleife ist eine Kontrollstruktur, die 
+    // verwendet wird, um eine bestimmte Aufgabe mehrmals
+    // auszuführen, solange eine bestimmte Bedingung 
+    // (hier: i < laufzeit) erfüllt ist.
+    // i wird mit jedem Schleifendurchlauf um 1 hochgezählt.
+    for (let i = 0; i < laufzeit; i++) {
+        
+        // Mit jedem Schleifendurchlauf wird der Rückzahlungsbetrag 
+        // mit dem Zinssatz multipliziert, um die Zinsen auszurechnen,
+        // die dann auf die ursprünglichen Rückzahlungsbetrag hinzuaddiert werden.
+        rückzahlungsbetrag += (rückzahlungsbetrag * zinssatz / 100)
+        console.log("Rückzahlung nach " + (i+1) + " Jahren: " + rückzahlungsbetrag)
+    } 
+
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){
+        serverAntwort.render('geldAnlegen.ejs', {
+            Betrag: betrag,
+            Laufzeit: laufzeit,
+            Zinssatz: zinssatz,
+            Erfolgsmeldung:"Nach " + laufzeit + " Jahren Laufzeit bekommen Sie " + rückzahlungsbetrag.toLocaleString('en-IN', {style: 'currency',currency: 'EUR', minimumFractionDigits: 2}) + " ausgezahlt."
+        })
+    }else{
+        serverAntwort.render('login.ejs',{
+            Meldung: ""
+        })
+    }              
+})
+
+
 
 
 //require('./Uebungen/ifUndElse.js')
