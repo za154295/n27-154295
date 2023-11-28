@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +7,7 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>N27 - Kontobewegungf anzeigen</title>
+    <title>N27 - Kontobewegung anzeigen</title>
 </head>
 <body>
     <div class="rahmen">
@@ -32,8 +32,7 @@
             </a>
         </div>
         <div class="inhaltsbereich">
-            <form method="post">
-                <label id="ABC">IBAN wählen:</label><br>
+            <label id="ABC">IBAN wählen:</label><br>
                 <select id="iban" name="iban">
                     <!-- Die for-Schleife sorgt dafür, dass das Dropdown-Menü alle Konten zur Auswahl anzeigt.
                     Bei 5 Konten wird die Schleife 5x durchlaufen. 
@@ -46,16 +45,19 @@
                         <option value="<%= MeineIbans[i].iban %>"><%= MeineIbans[i].iban %></option>
                     <% } %>                    
                 </select>
-                <label>Kontoart:</label><br>
-                <input type="text" name="Kontoart" readonly value=<%= MeineIbans[0].kontoart %>  ><br>
-                <label>Kontostand:</label><br>
-                <input type="number" name="Kontostand" readonly value=<%= MeineIbans[0].anfangssaldo %>  ><br>
-                <button class="login" formaction="/kontobewegungAnzeigen">Bitte ein Konto auswählen</button>
-            </form>   
-            <p class="erfolgsmeldung"><%= Erfolgsmeldung %></p>
+                <button class="login" formaction="/kontobewegungAnzeigen">ausgewähltes Konto anzeigen:</button>
+                <label>Ausgewähltes Konto:</label>
+                <input type="text" name="IBAN" readonly value=<%= IBAN %>  ><br>
+                <label>Kontobewegungen:</label><br>
+
+                <% for (var i=0; i < Kontobewegungen.length; i++){ %>
+                    <label><%=Kontobewegungen[i].verwendungszweck%></label>
+                <% } %>
+                
+            <p class="erfolg"> <%= Erfolgsmeldung %></p>
         </div>
         <div class="fusszeile">
-            &copy; 2022 GW21A
+            &copy; 2023 GW21A
         </div>
     </div>
 </body>

@@ -10,6 +10,7 @@ var IBAN = require('iban');
 // Außerdem ermöglicht die Datenbank, dass z.B. Geldüberweisungen
 // zwischen Anwendern möglich werden.
 
+
 var mysql = require('mysql'); 
 
 // Die Verbindung zur Datenbank wird hergestellt. Dazu werden die
@@ -63,9 +64,10 @@ dbVerbindung.connect(function(fehler){
   // idKunde ist Primary Key. Das bedeutet, dass die idKunde den Datensatz eindeutig
   // kennzeichnet. Das wiederum bedeutet, dass kein zweiter Kunde mit derselben idKunde angelegt werden kann.
 
-dbVerbindung.query('CREATE TABLE kunde(idKunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), ort VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY(idKunde));', function (fehler) {
+dbVerbindung.query('CREATE TABLE kunde(idKunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), ort VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), idKundenberater INT(11), PRIMARY KEY(idKunde));', function (fehler) {
     
     // Falls ein Problem bei der Query aufkommt, ...
+
     
     if (fehler) {
     
@@ -128,13 +130,13 @@ dbVerbindung.connect(function(fehler){
   
               //... dann wird eine Fehlermdldung geloggt. 
   
-              console.log("Tabelle kredit existiert bereits und wird nicht angelegt.")
-          
+              console.log("Tabelle konto existiert bereits und wird nicht angelegt.")
+
           }else{
               console.log("Fehler: " + fehler )
           }
       }else{
-              console.log("Tabelle kredit erfolgreich angelegt.")
+              console.log("Tabelle konto erfolgreich angelegt.")
        }
     })
 });
@@ -147,7 +149,6 @@ dbVerbindung.connect(function(fehler){
 // Kontobewegungen gelöscht werden. Man sagt dazu, dass eine LÖSCHANOMALIE verhindert
 // wird. Ebenso kann keine Kontobewegung angelegt werden zu einem Konto, dass es nicht
 // gibt. Das würde man EINFÜGEANOMALIE nennen.
-
 
 dbVerbindung.query('CREATE TABLE kontobewegung(timestamp TIMESTAMP, betrag SMALLINT, empfaengerIban VARCHAR(45), verwendungszweck VARCHAR(45), absenderIban VARCHAR(45), name VARCHAR(45), PRIMARY KEY(empfaengerIban,timestamp), FOREIGN KEY (absenderIban) REFERENCES konto(iban));', function (fehler) {
       
@@ -167,32 +168,32 @@ dbVerbindung.query('CREATE TABLE kontobewegung(timestamp TIMESTAMP, betrag SMALL
             console.log("Fehler: " + fehler )
         }
     }else{
-            console.log("Tabelle kredit erfolgreich angelegt.")
+            console.log("Tabelle kontobewegung erfolgreich angelegt.")
     }
 })
 
 // Ein Kunde soll neu in der Datenbank angelegt werden.
 
-dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail) VALUES (154295, "Arne", "Zender", "BOR", "123", "az@web.de") ;', function (fehler) {
+dbVerbindung.query('INSERT INTO kunde(idKunde, vorname, nachname, ort, kennwort, mail, idKundenberater) VALUES (150000, "Pit", "Kiff", "BOR", "123", "pk@web.de", 145) ;', function (fehler) {
       
     // Falls ein Problem bei der Query aufkommt, ...
     
     if (fehler) {
     
-        // ... und der Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
+        // ... und der Fehlercode "ER_DUP_ENTRY" lautet, ...
 
-        if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
+        if(fehler.code == "ER_DUP_ENTRY"){
 
             //... dann wird eine Fehlermdldung geloggt. 
 
-            console.log("Tabelle kredit existiert bereits und wird nicht angelegt.")
+            console.log("Der Kunde 150000 existiert bereits und wird nicht angelegt.")
         
         }else{
             console.log("Fehler: " + fehler )
         }
     }else{
-            console.log("Tabelle kredit erfolgreich angelegt.")
-     }
+            console.log("Kunde 150000 erfolgreich angelegt.")
+    }
 });
 
 class Kredit{
@@ -208,7 +209,6 @@ class Kredit{
         return this.Betrag * this.Zinssatz / 100 + this.Betrag
     }
 }
-
 
 // Programme verarbeiten oft Objekte der realen Welt. Objekte haben 
 // Eigenschaften. In unserem Bankingprogramm interessieren uns Objekte,
@@ -229,21 +229,56 @@ class Kunde{
     }
 }
 
-// Von der Kunden-Klasse wird eine konkrete Instanz gebildet. 
+// Die Tabelle Bank wird angelegt, damit die Daten der Bank nicht hart in die server.js eincodiert werden müssen.
 
-let kunde = new Kunde()
+dbVerbindung.query('CREATE TABLE bank(name VARCHAR(45), strasse VARCHAR(45), postleitzahl INT(11), ort VARCHAR(45), telefonnummer VARCHAR(45), bankleitzahl INT(8), ceo VARCHAR(45), PRIMARY KEY(bankleitzahl));', function (fehler) {
+      
+    // Falls ein Problem bei der Query aufkommt, ...
+    
+    if (fehler) {
+    
+        // ... und der Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
 
-// Die konkrete Instanz bekommt Eigenschaftswerte zugewiesen.
+        if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
+
+            //... dann wird eine Fehlermedldung geloggt. 
+
+            console.log("Tabelle bank existiert bereits und wird nicht angelegt.")
+        
+        }else{
+            console.log("Fehler: " + fehler )
+        }
+    }else{
+            console.log("Tabelle bank erfolgreich angelegt.")
+    }
+})
+
+// Die Bankdaten werden eingefügt. 
+
+dbVerbindung.query('INSERT INTO bank(name, strasse, postleitzahl, ort, telefonnummer, bankleitzahl, ceo) VALUES ("N27-Bank", "Josefstraße", 46325, "Borken", "02861 90990-0", 27000000, "Kurt Cobain") ;', function (fehler) {
+      
+    // Falls ein Problem bei der Query aufkommt, ...
+    
+    if (fehler) {
+    
+        // ... und der Fehlercode "ER_DUP_ENTRY" lautet, ...
+
+        if(fehler.code == "ER_DUP_ENTRY"){
+
+            //... dann wird eine Fehlermedldung geloggt. 
+
+            console.log("Die Bank ist bereits in der Tabelle bank angelegt.")
+        
+        }else{
+            console.log("Fehler: " + fehler )
+        }
+    }else{
+            console.log("Tabelle bank erfolgreich angelegt.")
+    }
+});
 
 
 
-kunde.IdKunde = 150000
-kunde.Nachname = "Müller"
-kunde.Vorname = "Pit"
-kunde.Geburtsdatum = "23.10.2000"
-kunde.Mail = "mueller@web.de"
-kunde.Kennwort = "123"
-kunde.Rufnummer = "+49123/4567890"
 
 class Kundenberater{
     constructor(){
@@ -257,19 +292,55 @@ class Kundenberater{
     }
 }
 
-// Es wird ein Kundenberater-Objekt instanziiert
+// Eine Tabelle namens kundenberater wird angelegt. 
 
-let kundenberater = new Kundenberater()
+dbVerbindung.query('CREATE TABLE kundenberater(idKundenberater INT(11), vorname VARCHAR(45), nachname VARCHAR(45), position VARCHAR(45), mail VARCHAR(45), rufnummer VARCHAR(45), begruessung VARCHAR(45), PRIMARY KEY(idKundenberater));', function (fehler) {
+      
+    // Falls ein Problem bei der Query aufkommt, ...
+    
+    if (fehler) {
+    
+        // ... und der Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
 
-// Die konkrete Instanz bekommt Eigenschaftswerte zugewiesen.
+        if(fehler.code == "ER_TABLE_EXISTS_ERROR"){
 
-kundenberater.IdKundenberater = 1
-kundenberater.Nachname = "Zimmermann"
-kundenberater.Vorname = "Franz"
-kundenberater.Mail = "zimmermann@n27.com"
-kundenberater.Rufnummer = "+49123/4567890"
-kundenberater.Begruessung = "Hallo, ich bin's, Dein Kundenberater!"
-kundenberater.Position = "Master of desaster"
+            //... dann wird eine Fehlermedldung geloggt. 
+
+            console.log("Tabelle kundenberater existiert bereits und wird nicht angelegt.")
+        
+        }else{
+            console.log("Fehler: " + fehler )
+        }
+    }else{
+            console.log("Tabelle kundenberater erfolgreich angelegt.")
+    }
+})
+
+// Ein Kundenberaterobjekt wird in die Tabelle kundenberater eingefügt.
+
+dbVerbindung.query('INSERT INTO kundenberater(idKundenberater, vorname, nachname, position, mail, rufnummer, begruessung) VALUES (145, "Max", "Müller", "Master of Desaster", "max.mueller@n27.com", "02861 90990-0", "Hallo ich bin es, Ihr Kundenberater!") ;', function (fehler) {
+      
+    // Falls ein Problem bei der Query aufkommt, ...
+    
+    if (fehler) {
+    
+        // ... und der Fehlercode "ER_TABLE_EXISTS_ERROR" lautet, ...
+
+        if(fehler.code == "ER_DUP_ENTRY"){
+
+            //... dann wird eine Fehlermdldung geloggt. 
+
+            console.log("Der Kundenberater max.mueller@n27.com existiert bereits und wird nicht angelegt.")
+        
+        }else{
+            console.log("Fehler: " + fehler )
+        }
+    }else{
+            console.log("Kundenberater max.mueller@n27.com erfolgreich angelegt.")
+    }
+});
+
+
 
 // Die Klasse Konto ist der Bauplan für alle konto-Objekte.
 // In der Klasse werden alle relevanten Eigenschaften definiert.
@@ -357,17 +428,54 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
     const idKunde = browserAnfrage.body.IdKunde
     const kennwort = browserAnfrage.body.Kennwort
     
+    // IdKunde und Kennwort werden auf der Konsole geloggt.
+
+    console.log("Ein Kunde versucht sich anzumelden.")
     console.log("ID des Kunden: " + idKunde)
     console.log("Kennwort des Kunden: " + kennwort)
 
     // Die Identität des Kunden wird überprüft.
+    // Dazu wird die Tabelle Kunde auf einen Kunden mit IdKunde und Kennwort abgefragt.
     
     dbVerbindung.query('SELECT * FROM kunde WHERE idKunde = ' + idKunde + ' AND kennwort ="' + kennwort + '";', function (fehler, result) {      
         
+        // Der oder die zurückgegebenen Datensätze stecken im result und werden auf der Konsole geloggt.
+
         console.log(result)
 
+        // Wenn im result exakt ein Datensatz zurückgegeben wird, bedeutet dass, das 
+        // es einen Kunden mit dieser idKunde und dem Kennwort in der Datenbank gibt.
+        // Es kann in der Datenbank höchstes ein Datensatz mit einer bestimmten Kombination aus
+        // idKunde und Kennwort geben, weil idKunde in der Tabelle kunde Primary Key ist.
+        
         if(result.length === 1){
-    
+
+            console.log("Die Anmeldedaten des Kunden sind korrekt.")
+
+            // Wenn der Kunde berechtigt ist, wird aus dem result ein Kundenobjekt erzeugt.
+            // "let kunde" bedeutet, dass ein Kundenobjekt deklariert wird. Der Name ist 
+            // kunde.    
+            // "new Kunde()" bedeutet, dass das Objekt instanziiert wird. Das wiederum heißt, dass
+            // Speiherzellen im Arbeitsspeicher reserviert werden. 
+            
+            let kunde = new Kunde()
+
+            // Die konkrete Instanz bekommt Eigenschaftswerte zugewiesen. Das nennt man
+            // Initialisierung.
+
+            // mit "[0]" wird der erste Datensatz aus dem result isoliert. [1] wäre der zweite Datensatz usw.
+            // Dahinter wird der Nae der Eigenschaft angegeben.
+            // Die Werte aus dem result werden unserem Kundenobjekt zugewiesen.
+
+            kunde.IdKunde = result[0].idKunde
+            kunde.Nachname = result[0].nachname
+            kunde.Vorname = result[0].vorname
+            kunde.Mail = result[0].mail
+            kunde.Kennwort = result[0].kennwort
+            kunde.Ort = result[0].ort
+
+            console.log(kunde)
+
             // Ein Cookie namens 'istAngemeldetAls' wird beim Browser gesetzt.
             // Der Wert des Cookies ist das in eine Zeichenkette umgewandelte Kunden-Objekt.
             // Der Cookie wird signiert, also gegen Manpulationen geschützt.
@@ -384,6 +492,7 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
             // dann gibt der Server die gerenderte Index-Seite zurück.
             
             serverAntwort.render('index.ejs', {})
+
         }else{
     
             // Wenn entweder die eingegebene Id oder das Kennwort oder beides
@@ -395,18 +504,7 @@ meineApp.post('/login',(browserAnfrage, serverAntwort, next) => {
             })
         }
     })
-
-
-
-
-
-
-
-
-
-    
 })
-
 
 // Wenn die login-Seite im Browser aufgerufen wird, ...
 
@@ -434,13 +532,70 @@ meineApp.get('/about',(browserAnfrage, serverAntwort, next) => {
 
     if(browserAnfrage.signedCookies['istAngemeldetAls']){
         
-        // Die About-Seite wird an den Browser gegeben:
+        // ToDo: Unsere Bank aus der Datenbank auslesen 
 
-        serverAntwort.render('about.ejs',{})
+        dbVerbindung.query('SELECT * FROM bank WHERE bankleitzahl = 27000000;', function (fehler, result) {      
+            
+            console.log(result)
+
+            // Ein neues Bankobjekt wird instanziiert
+
+            class Bank{
+                constructor(){
+                    this.Name
+                    this.Strasse
+                    this.Postleitzahl
+                    this.Ort
+                    this.Telefonnummer
+                    this.Bankleitzahl
+                    this.CEO
+                }
+            }
+            
+            let bank = new Bank();
+
+            if(result.length === 0){
+
+                // Wenn es keinen Kundenberater in der Datenbank gibt, werden die Werte wie folgt gesetzt:
+
+                bank.Name = "N.N."
+                bank.Strasse = "N.N."
+                bank.Postleitzahl = ""
+                bank.Ort = ""
+                bank.Telefonnummer = ""
+                bank.Bankleitzahl = ""
+                bank.CEO = ""
+
+            }else{
+
+                // Wenn der result nicht leer ist, wird das erste Objekt mit seinen Eigenschaften aus dem result zugewiesen.
+
+                bank.Name = result[0].name
+                bank.Strasse = result[0].strasse
+                bank.Postleitzahl = result[0].postleitzahl
+                bank.Ort = result[0].ort
+                bank.Telefonnummer = result[0].telefonnummer
+                bank.Bankleitzahl = result[0].bankleitzahl
+                bank.CEO = result[0].ceo
+            }
+
+            // Die Support-Seite wird an den Browser gegeben (man sagt auch gerendert):
+
+            serverAntwort.render('about.ejs', {
+                Name: bank.Name,
+                Strasse: bank.Strasse,
+                Postleitzahl: bank.Postleitzahl,
+                Ort: bank.Ort,
+                Telefonnummer: bank.Telefonnummer,
+                Bankleitzahl: bank.Bankleitzahl,
+                CEO: bank.CEO
+            })
+        })
     }else{
 
         // Wenn der Kunde noch nicht eigeloggt ist, soll
         // die Loginseite an den Browser zurückgegeben werden.
+        
         serverAntwort.render('login.ejs', {
             Meldung: ""
         })
@@ -451,11 +606,15 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
 
     if(browserAnfrage.signedCookies['istAngemeldetAls']){
         
+        // Die Eigenschaftswerte des Kunden stecken im Cookie und werden zu einem Kundenobjekt
+        
+        const kunde = JSON.parse(browserAnfrage.signedCookies.istAngemeldetAls)
+
         serverAntwort.render('profile.ejs', {
             Vorname: kunde.Vorname,
             Nachname: kunde.Nachname,
             Mail: kunde.Mail,
-            Rufnummer: kunde.Rufnummer,
+            Ort: kunde.Ort,
             Kennwort: kunde.Kennwort,
             Erfolgsmeldung: ""
         })
@@ -468,14 +627,50 @@ meineApp.get('/profile',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.get('/support',(browserAnfrage, serverAntwort, next) => {              
 
-    if(browserAnfrage.signedCookies['istAngemeldetAls']){        
-        serverAntwort.render('support.ejs', {
-            Vorname: kundenberater.Vorname,
-            Nachname: kundenberater.Nachname,
-            Mail: kundenberater.Mail,
-            Rufnummer: kundenberater.Rufnummer,
-            Begruessung: kundenberater.Begruessung,
-            Position: kundenberater.Position
+    if(browserAnfrage.signedCookies['istAngemeldetAls']){   
+        
+        // Der Kundenberater des Kunden wird aus der Datenbank ausgelesen
+
+        dbVerbindung.query('SELECT * FROM kundenberater WHERE idKundenberater = 145;', function (fehler, result) {      
+            
+            console.log(result)
+
+            // Ein neues Kundenberaterobjekt wird instanziiert
+
+            let kundenberater = new Kundenberater();
+
+            if(result.length === 0){
+
+                // Wenn es keinen Kundenberater in der Datenbank gibt, werden die Werte wie folgt gesetzt:
+
+                kundenberater.Vorname = "N.N."
+                kundenberater.Nachname = "N.N."
+                kundenberater.Mail = ""
+                kundenberater.Rufnummer = ""
+                kundenberater.Begruessung = ""
+                kundenberater.Position = ""
+            }else{
+
+                // Wenn der result nicht leer ist, wird das erste Objekt mit seinen Eigenschaften aus dem result zugewiesen.
+
+                kundenberater.Vorname = result[0].vorname
+                kundenberater.Nachname = result[0].nachname
+                kundenberater.Mail = result[0].mail
+                kundenberater.Rufnummer = result[0].rufnummer
+                kundenberater.Begruessung = result[0].begruessung
+                kundenberater.Position = result[0].position
+            }
+
+            // Die Support-Seite wird an den Browser gegeben (man sagt auch gerendert):
+
+            serverAntwort.render('support.ejs', {
+                Vorname: kundenberater.Vorname,
+                Nachname: kundenberater.Nachname,
+                Mail: kundenberater.Mail,
+                Rufnummer: kundenberater.Rufnummer,
+                Begruessung: kundenberater.Begruessung,
+                Position: kundenberater.Position
+            })
         })
     }else{
         serverAntwort.render('login.ejs',{
@@ -536,7 +731,6 @@ meineApp.post('/kreditBerechnen',(browserAnfrage, serverAntwort, next) => {
     }              
 })
 
-
 // Die Funktion meineApp.get('/kontoAnlegen'...  wird abgearbeitet, sobald die Seite
 // kontoanlegen im Browser aufgerufen wird.
 
@@ -560,7 +754,6 @@ meineApp.get('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {
         })
     }              
 })
-
 
 // Sobald der Speichern-Button auf der Profile-Seite gedrückt wird,
 // wird die meineApp.post('profile'...) abgearbeitet.
@@ -750,6 +943,8 @@ meineApp.post('/kontostandAnzeigen',(browserAnfrage, serverAntwort, next) => {
 
 meineApp.post('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {              
     
+    const kunde = JSON.parse(browserAnfrage.signedCookies.istAngemeldetAls)
+
     let erfolgsmeldung = ""
 
     // Die im Formular eingegebene Kontoart wird an die Konstante namens kontoArt zugewiesen
@@ -800,7 +995,7 @@ meineApp.post('/kontoAnlegen',(browserAnfrage, serverAntwort, next) => {
 
     // Für die generierte IBAN muss ein neuer Datensatz in der Tabelle konto angelegt werden.
 
-    dbVerbindung.query('INSERT INTO konto(iban, idKunde, anfangssaldo, kontoart, timestamp) VALUES ("' + iban + '", 150000, 1, "' + kontoArt + '", NOW()) ;', function (fehler) {
+    dbVerbindung.query('INSERT INTO konto(iban, idKunde, anfangssaldo, kontoart, timestamp) VALUES ("' + iban + '", "'+ kunde.IdKunde +'", 1, "' + kontoArt + '", NOW()) ;', function (fehler) {
       
         // Falls ein Problem bei der Query aufkommt, ...
         

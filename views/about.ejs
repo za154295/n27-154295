@@ -8,37 +8,39 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>N27 - Über uns</title>
-
 </head>
 <body>
     <div class="rahmen">
         <div class="kopf">
-            <h1>N27 - Impressum</h1>            
+            <h1>N27 - Über uns</h1>
         </div>
-        <div class="navigationsleiste">
-             <a href="/about"><i class="fa fa-info fa-3x" aria-hidden="true" title="Impressum"></i></a> ---
-             <a href="/login"><i class="fa fa-sign-out fa-3x" title="Abmelden"></i></a> --
-             <a href="/"><i class="fa fa-home fa-3x" aria-hidden="true" title="Startseite"></i></a> --
-             <a href="/profile"><i class="fa fa-user fa-3x" aria-hidden="true" title="Profil"></i></a> --
-             <a href="/support"><i class="fa fa-question fa-3x" aria-hidden="true" title="Support"></i></a>
- 
-
+        <div class="navigationsleiste">            
+            <a href="/">
+                <i class="fa fa-home fa-2x" aria-hidden="true" title="Willkommen"></i>
+            </a> --
+            <a href="/profile">
+                <i class="fa fa-user fa-2x" aria-hidden="true" title="Mein Profil"></i>
+            </a>   --
+            <a href="/about">
+                <i class="fa fa-info fa-2x" aria-hidden="true" title="Über uns"></i>
+            </a>   --
+            <a href="/support">
+                <i class="fa fa-phone-square fa-2x" aria-hidden="true" title="Über uns"></i>
+            </a>   --
+            <a href="/login">
+                <i class="fa fa-sign-out fa-2x" title="Abmelden"></i>
+            </a>
         </div>
         <div class="inhaltsbereich">
-            <h2>Über uns</h3>
-            <h3>N27 Bank AG</h3>
-            <h3>Arne J. Zender</h3>
-            <h3>Hauptsitz:</h3>
-            <h3>Josefstr. 10</h3>
-            <h3>46325 Borken</h3>
-            <h3>Bankleitzahl: 27 000 000</h3>
- 
-            <h2>Kontakt</h2>
-            <h3>Telefon: 01234 56789</h3>
-            <h3>E-Mail: test@gmail.com</h3>
-            
-
-
+            <h2><Name</h2>
+            <p><%=Name%></p>
+            <h2>Hauptsitz</h2>            
+            <p><%=Strasse%></p>
+            <p><%=Postleitzahl%> <%=Ort%></p>
+            <p>Telefon: <%=Telefonnummer%></p>
+            <p>Bankleitzahl: <%=Bankleitzahl%></p>
+            <h2>Geschäftsführung</h2>
+            <p><%=CEO%></p>
         </div>
         <div class="fusszeile">
             &copy; 2023 GW21A
